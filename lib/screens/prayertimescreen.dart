@@ -1,7 +1,7 @@
 // lib/screens/prayer_times_screen.dart
 import 'package:flutter/material.dart';
 import 'package:islamic_center_prayer_times/providers/prayertimes_provider.dart';
-import 'package:islamic_center_prayer_times/widgets/buttom_navigationbar.dart';
+import 'package:islamic_center_prayer_times/widgets/prayertimescreen_widgets/buttom_navigationbar.dart';
 import 'package:provider/provider.dart';
 
 class PrayerTimesScreen extends StatelessWidget {
