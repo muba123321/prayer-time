@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "247960570637",
+    "project_id": "prayer-times-1c62a",
+    "storage_bucket": "prayer-times-1c62a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247960570637:android:39a1b692395f592043fe44",
+        "android_client_info": {
+          "package_name": "com.islamic_center_prayer_times"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLqQmipkmIxe19uiN9eiCDEmNhAyicsk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

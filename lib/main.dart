@@ -1,13 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:islamic_center_prayer_times/firebase_options.dart';
 
 import 'package:islamic_center_prayer_times/providers/onboarding_provider.dart';
 import 'package:islamic_center_prayer_times/providers/prayertimes_provider.dart';
 import 'package:islamic_center_prayer_times/screens/splashscreen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(const MyApp()));
 }
