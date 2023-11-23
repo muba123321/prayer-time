@@ -48,6 +48,14 @@ class PrayerTimesProvider extends ChangeNotifier {
   //     return PrayerTime(name: name, time: time);
   //   });
   // }
+  int _bottomsheetIndex = 0;
+
+  int get bottomsheetIndex => _bottomsheetIndex;
+
+  void selectedBottomSheetIndex(int index) {
+    _bottomsheetIndex = index;
+    notifyListeners(); // Notify listeners when the selected index changes
+  }
 
   Map<String, dynamic> _prayerTimings = {};
 

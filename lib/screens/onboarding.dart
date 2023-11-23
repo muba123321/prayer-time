@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:islamic_center_prayer_times/providers/onboarding_provider.dart';
-
-import 'package:islamic_center_prayer_times/screens/prayertimescreen.dart';
+import 'package:islamic_center_prayer_times/pages/homepage.dart';
 import 'package:islamic_center_prayer_times/widgets/onboarding_widgets/onboarding_card.dart';
 import 'package:provider/provider.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:video_player/video_player.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -74,9 +72,6 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                           onIndexChanged: (value) {
                             notifier.selectedIndex(value);
                             notifier.swiperController.index = value;
-                            print('This is the value $value');
-                            print(
-                                'This is the controller ${notifier.swiperController.index}');
                           },
                           index: notifier.currentIndex,
                           curve: Curves.ease,
@@ -108,8 +103,6 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     style: const ButtonStyle(
-                                        // backgroundColor: MaterialStatePropertyAll(
-                                        //     Color(0xFF772f30)),
                                         side: MaterialStatePropertyAll(
                                             BorderSide(
                                                 width: 2,
@@ -144,8 +137,6 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                                   onPressed: () {
                                     if (notifier.swiperController.index < 2) {
                                       notifier.swiperController.next();
-                                      print(
-                                          'This is swip index ${notifier.swiperController.index}');
                                     } else {
                                       context
                                           .read<OnboardingProvider>()
@@ -154,7 +145,7 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                                                   .pushReplacement(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const PrayerTimesScreen(),
+                                                      const HomePage(),
                                                 ),
                                               ));
                                     }

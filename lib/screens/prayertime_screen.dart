@@ -1,21 +1,20 @@
-// lib/screens/prayer_times_screen.dart
 import 'package:flutter/material.dart';
 import 'package:islamic_center_prayer_times/providers/prayertimes_provider.dart';
-import 'package:islamic_center_prayer_times/widgets/prayertimescreen_widgets/buttom_navigationbar.dart';
 import 'package:provider/provider.dart';
 
 class PrayerTimesScreen extends StatelessWidget {
-  const PrayerTimesScreen({super.key});
+  const PrayerTimesScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final prayerTimesProvider = Provider.of<PrayerTimesProvider>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Prayer Times'),
-      ),
-      body: Center(
+    return Container(
+      // appBar: AppBar(
+      //   title: const Text('Prayer Times'),
+      // ),
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -52,7 +51,6 @@ class PrayerTimesScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const ButtomNavigationBar(),
     );
   }
 }

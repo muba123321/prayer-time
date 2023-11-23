@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:islamic_center_prayer_times/screens/onboarding.dart';
 import 'package:islamic_center_prayer_times/providers/prayertimes_provider.dart';
-import 'package:islamic_center_prayer_times/screens/prayertimescreen.dart';
+import 'package:islamic_center_prayer_times/pages/homepage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,9 +31,8 @@ class SplashScreenState extends State<SplashScreen> {
     if (context.mounted) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => onboardingCompleted
-              ? const PrayerTimesScreen()
-              : const OnboardingScreen(),
+          builder: (context) =>
+              onboardingCompleted ? const HomePage() : const OnboardingScreen(),
         ),
       );
     }
