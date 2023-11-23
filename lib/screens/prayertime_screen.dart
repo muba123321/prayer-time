@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:islamic_center_prayer_times/providers/prayertimes_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -31,18 +32,53 @@ class PrayerTimesScreen extends StatelessWidget {
             Consumer<PrayerTimesProvider>(
               builder: (context, prayerTimesProvider, child) {
                 if (prayerTimesProvider.prayerTimings.isNotEmpty) {
+                  final prayerTimings = prayerTimesProvider.prayerTimings;
+
+                  print(
+                      'This is Fajr time.. ${prayerTimings['data']['timings']['Fajr']}');
                   return Expanded(
                     child: ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: prayerTimesProvider.prayerTimings.entries
-                          .map((prayerTime) {
-                        final String name = prayerTime.key;
-                        final dynamic time = prayerTime.value;
-                        return Text('$name: $time');
-                      }).toList(),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildDateItem('Date',
+                                prayerTimings['data']['date']['readable']),
+                            _buildDateItem('Hijri',
+                                prayerTimings['data']['date']['hijri']['date']),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
+                        _buildPrayerTimeItem(
+                            'Fajr', prayerTimings['data']['timings']['Fajr']),
+                        _buildPrayerTimeItem('Sunrise',
+                            prayerTimings['data']['timings']['Sunrise']),
+                        _buildPrayerTimeItem(
+                            'Dhuhr', prayerTimings['data']['timings']['Dhuhr']),
+                        _buildPrayerTimeItem(
+                            'Asr', prayerTimings['data']['timings']['Asr']),
+                        _buildPrayerTimeItem('Maghrib',
+                            prayerTimings['data']['timings']['Maghrib']),
+                        _buildPrayerTimeItem(
+                            'Isha', prayerTimings['data']['timings']['Isha']),
+                      ],
                     ),
                   );
+                  // Expanded(
+                  //   child: ListView(
+                  //     scrollDirection: Axis.vertical,
+                  //     shrinkWrap: true,
+                  //     children: prayerTimesProvider.prayerTimings.entries
+                  //         .map((prayerTime) {
+                  //       final String name = prayerTime.key;
+                  //       final dynamic time = prayerTime.value;
+                  //       print('This are the names .. $name');
+                  //       print('This are the times .. $time');
+                  //       return Text('$name: $time');
+                  //     }).toList(),
+                  //   ),
+                  // );
                 } else {
                   return const Text('Press the button to fetch prayer times.');
                 }
@@ -53,4 +89,51 @@ class PrayerTimesScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildPrayerTimeItem(String name, String time) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 0, right: 80, top: 16),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          '$name:',
+          style: GoogleFonts.aBeeZee(
+              color: const Color(0xFF772f30),
+              fontSize: 24,
+              fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          time,
+          style: GoogleFonts.aBeeZee(
+              color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildDateItem(String name, String time) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Text(
+        '$name:',
+        style: GoogleFonts.aBeeZee(
+            color: const Color(0xFF772f30),
+            fontSize: 24,
+            fontWeight: FontWeight.w700),
+      ),
+      const SizedBox(width: 10),
+      Text(
+        time,
+        style: GoogleFonts.aBeeZee(
+            color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+      ),
+    ],
+  );
 }

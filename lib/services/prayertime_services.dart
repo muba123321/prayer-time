@@ -14,7 +14,7 @@ class PrayerTimesService {
     required String address,
     int method = 2,
     String shafaq = 'general',
-    String tune = '0, -1, 1, -1, 0, 3, 1, 0, 0, 0, 0',
+    String tune = '0, 0 , -1, 0, 0, 3, 0, 0, 0,',
     int school = 0,
     int midnightMode = 0,
     int latitudeAdjustmentMethod = 3,
