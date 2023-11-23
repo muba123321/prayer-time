@@ -11,95 +11,101 @@ class PrayerTimesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final prayerTimesProvider = Provider.of<PrayerTimesProvider>(context);
-    return Container(
-      // appBar: AppBar(
-      //   title: const Text('Prayer Times'),
-      // ),
-      child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          if (prayerTimesProvider.isLoading) const CircularProgressIndicator(),
-          if (prayerTimesProvider.prayerTimings.isNotEmpty)
-            ElevatedButton(
+    return
+        // appBar: AppBar(
+        //   title: const Text('Prayer Times'),
+        // ),
+        ListView(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        if (prayerTimesProvider.isLoading)
+          const Padding(
+            padding: EdgeInsets.only(left: 170.0, right: 170),
+            child: SizedBox(child: CircularProgressIndicator()),
+          ),
+        if (prayerTimesProvider.prayerTimings.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 16, left: 60.0, right: 60),
+            child: ElevatedButton(
               onPressed: () {
                 prayerTimesProvider.fetchPrayerTimingsByAddress();
               },
               child: const Text('Fetch Prayer Times'),
             ),
-          const SizedBox(height: 20),
-          Consumer<PrayerTimesProvider>(
-            builder: (context, prayerTimesProvider, child) {
-              if (prayerTimesProvider.prayerTimings.isNotEmpty) {
-                final prayerTimings = prayerTimesProvider.prayerTimings;
-
-                print(
-                    'This is Fajr time.. ${prayerTimings['data']['timings']['Fajr']}');
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildDateItem('Date',
-                              prayerTimings['data']['date']['readable']),
-                          _buildDateItem('Hijri',
-                              prayerTimings['data']['date']['hijri']['date']),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: const Color(0xFF772f30),
-                              width: 2,
-                              style: BorderStyle.solid,
-                              strokeAlign: BorderSide.strokeAlignOutside,
-                            ),
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Column(children: [
-                          _buildPrayerTimeItem(
-                              'Fajr', prayerTimings['data']['timings']['Fajr']),
-                          _buildPrayerTimeItem('Sunrise',
-                              prayerTimings['data']['timings']['Sunrise']),
-                          _buildPrayerTimeItem('Dhuhr',
-                              prayerTimings['data']['timings']['Dhuhr']),
-                          _buildPrayerTimeItem(
-                              'Asr', prayerTimings['data']['timings']['Asr']),
-                          _buildPrayerTimeItem('Maghrib',
-                              prayerTimings['data']['timings']['Maghrib']),
-                          _buildPrayerTimeItem(
-                              'Isha', prayerTimings['data']['timings']['Isha']),
-                        ]),
-                      ),
-                    )
-                  ],
-                );
-                // Expanded(
-                //   child: ListView(
-                //     scrollDirection: Axis.vertical,
-                //     shrinkWrap: true,
-                //     children: prayerTimesProvider.prayerTimings.entries
-                //         .map((prayerTime) {
-                //       final String name = prayerTime.key;
-                //       final dynamic time = prayerTime.value;
-                //       print('This are the names .. $name');
-                //       print('This are the times .. $time');
-                //       return Text('$name: $time');
-                //     }).toList(),
-                //   ),
-                // );
-              } else {
-                return const Text('Press the button to fetch prayer times.');
-              }
-            },
           ),
-        ],
-      ),
+        const SizedBox(height: 20),
+        Consumer<PrayerTimesProvider>(
+          builder: (context, prayerTimesProvider, child) {
+            if (prayerTimesProvider.prayerTimings.isNotEmpty) {
+              final prayerTimings = prayerTimesProvider.prayerTimings;
+
+              print(
+                  'This is Fajr time.. ${prayerTimings['data']['timings']['Fajr']}');
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildDateItem(
+                            'Date', prayerTimings['data']['date']['readable']),
+                        _buildDateItem('Hijri',
+                            prayerTimings['data']['date']['hijri']['date']),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: const Color(0xFF772f30),
+                            width: 2,
+                            style: BorderStyle.solid,
+                            strokeAlign: BorderSide.strokeAlignOutside,
+                          ),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Column(children: [
+                        _buildPrayerTimeItem(
+                            'Fajr', prayerTimings['data']['timings']['Fajr']),
+                        _buildPrayerTimeItem('Sunrise',
+                            prayerTimings['data']['timings']['Sunrise']),
+                        _buildPrayerTimeItem(
+                            'Dhuhr', prayerTimings['data']['timings']['Dhuhr']),
+                        _buildPrayerTimeItem(
+                            'Asr', prayerTimings['data']['timings']['Asr']),
+                        _buildPrayerTimeItem('Maghrib',
+                            prayerTimings['data']['timings']['Maghrib']),
+                        _buildPrayerTimeItem(
+                            'Isha', prayerTimings['data']['timings']['Isha']),
+                      ]),
+                    ),
+                  )
+                ],
+              );
+              // Expanded(
+              //   child: ListView(
+              //     scrollDirection: Axis.vertical,
+              //     shrinkWrap: true,
+              //     children: prayerTimesProvider.prayerTimings.entries
+              //         .map((prayerTime) {
+              //       final String name = prayerTime.key;
+              //       final dynamic time = prayerTime.value;
+              //       print('This are the names .. $name');
+              //       print('This are the times .. $time');
+              //       return Text('$name: $time');
+              //     }).toList(),
+              //   ),
+              // );
+            } else {
+              return const Text('Press the button to fetch prayer times.');
+            }
+          },
+        ),
+      ],
     );
   }
 }
