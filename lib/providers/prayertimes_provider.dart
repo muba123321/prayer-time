@@ -48,6 +48,60 @@ class PrayerTimesProvider extends ChangeNotifier {
   //     return PrayerTime(name: name, time: time);
   //   });
   // }
+
+  bool _beep = false;
+
+  bool get beep => _beep;
+
+  void setBeepBool() {
+    _beep = !_beep;
+    notifyListeners(); // Notify listeners when the selected index changes
+  }
+
+  bool _beep1 = false;
+
+  bool get beep1 => _beep1;
+
+  void setBeep1Bool() {
+    _beep1 = !_beep1;
+    notifyListeners(); // Notify listeners when the selected index changes
+  }
+
+  bool _beep2 = false;
+
+  bool get beep2 => _beep2;
+
+  void setBeep2Bool() {
+    _beep2 = !_beep2;
+    notifyListeners(); // Notify listeners when the selected index changes
+  }
+
+  bool _beep3 = false;
+
+  bool get beep3 => _beep3;
+
+  void setBeep3Bool() {
+    _beep3 = !_beep3;
+    notifyListeners(); // Notify listeners when the selected index changes
+  }
+
+  bool _beep4 = false;
+
+  bool get beep4 => _beep4;
+
+  void setBeep4Bool() {
+    _beep4 = !_beep4;
+    notifyListeners(); // Notify listeners when the selected index changes
+  }
+
+  bool _beep5 = false;
+  bool get beep5 => _beep5;
+
+  void setBeep5Bool() {
+    _beep5 = !_beep5;
+    notifyListeners(); // Notify listeners when the selected index changes
+  }
+
   int _bottomsheetIndex = 0;
 
   int get bottomsheetIndex => _bottomsheetIndex;

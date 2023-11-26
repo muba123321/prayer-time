@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart';
 
@@ -15,6 +17,8 @@ class NotificationService {
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
+        defaultPresentAlert: true,
+        defaultPresentSound: true,
         onDidReceiveLocalNotification:
             (int id, String? title, String? body, String? payload) async {});
 
@@ -25,41 +29,45 @@ class NotificationService {
             (NotificationResponse notificationResponse) async {});
   }
 
-  notificationDetails() {
-    return const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'channelId',
-          'channelName',
-          importance: Importance.max,
-          enableVibration: true,
-          playSound: true,
-          icon: 'logos',
-        ),
-        iOS: DarwinNotificationDetails());
-  }
+  // notificationDetails() {
+  //   return const NotificationDetails(
+  //       android: AndroidNotificationDetails(
+  //         'channelId',
+  //         'channelName',
+  //         importance: Importance.max,
+  //         enableVibration: true,
+  //         playSound: true,
+  //         icon: 'logos',
+  //       ),
+  //       iOS: DarwinNotificationDetails());
+  // }
 
-  Future showNotification(
-      {int id = 0, String? title, String? body, String? payLoad}) async {
-    return notificationsPlugin.show(
-        id, title, body, await notificationDetails());
-  }
+  // Future showNotification(
+  //     {int id = 0, String? title, String? body, String? payLoad}) async {
+  //   return notificationsPlugin.show(
+  //       id, title, body, await notificationDetails());
+  // }
 
-  Future<void> scheduleNotification({
-    required int id,
-    required String title,
-    required String body,
-    required TZDateTime scheduledDate,
-  }) async {
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+  Future<void> scheduleNotification(
+      {required int id,
+      required String title,
+      required String body,
+      required TZDateTime scheduledDate,
+      required bool beep}) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'channelId',
       'channelName',
       importance: Importance.max,
       enableVibration: true,
-      playSound: true,
+      vibrationPattern: Int64List.fromList([500, 1000, 500, 2000]),
+      playSound: beep,
       icon: 'logos',
     );
 
-    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails();
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails(
+      presentSound: beep,
+      //  shouldVibrate: true,
+    );
 
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,

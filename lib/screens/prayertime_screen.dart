@@ -46,35 +46,35 @@ class PrayerTimesScreen extends StatelessWidget {
 
               // Schedule notification for each prayer time
               _schedulePrayerTimeNotification(
-                prayerTimesProvider,
-                notificationService,
-                'Fajr',
-                prayerTimings['data']['timings']['Fajr'],
-              );
+                  prayerTimesProvider,
+                  notificationService,
+                  'Fajr',
+                  prayerTimings['data']['timings']['Fajr'],
+                  prayerTimesProvider.beep);
               _schedulePrayerTimeNotification(
-                prayerTimesProvider,
-                notificationService,
-                'Dhuhr',
-                prayerTimings['data']['timings']['Dhuhr'],
-              );
+                  prayerTimesProvider,
+                  notificationService,
+                  'Dhuhr',
+                  prayerTimings['data']['timings']['Dhuhr'],
+                  prayerTimesProvider.beep);
               _schedulePrayerTimeNotification(
-                prayerTimesProvider,
-                notificationService,
-                'Asr',
-                prayerTimings['data']['timings']['Asr'],
-              );
+                  prayerTimesProvider,
+                  notificationService,
+                  'Asr',
+                  prayerTimings['data']['timings']['Asr'],
+                  prayerTimesProvider.beep);
               _schedulePrayerTimeNotification(
-                prayerTimesProvider,
-                notificationService,
-                'Maghrib',
-                prayerTimings['data']['timings']['Maghrib'],
-              );
+                  prayerTimesProvider,
+                  notificationService,
+                  'Maghrib',
+                  prayerTimings['data']['timings']['Maghrib'],
+                  prayerTimesProvider.beep);
               _schedulePrayerTimeNotification(
-                prayerTimesProvider,
-                notificationService,
-                'Isha',
-                prayerTimings['data']['timings']['Isha'],
-              );
+                  prayerTimesProvider,
+                  notificationService,
+                  'Isha',
+                  prayerTimings['data']['timings']['Isha'],
+                  prayerTimesProvider.beep);
               // ... Schedule notifications for other prayer times
               return Column(
                 children: [
@@ -104,22 +104,48 @@ class PrayerTimesScreen extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(16)),
                       child: Column(children: [
-                        _buildPrayerTimeItem(FlutterIslamicIcons.lantern,
-                            'Fajr', prayerTimings['data']['timings']['Fajr']),
                         _buildPrayerTimeItem(
+                            prayerTimesProvider,
+                            FlutterIslamicIcons.lantern,
+                            'Fajr',
+                            prayerTimings['data']['timings']['Fajr'],
+                            prayerTimesProvider.beep,
+                            true),
+                        _buildPrayerTimeItem(
+                            prayerTimesProvider,
                             Icons.wb_twilight_outlined,
                             'Sunrise',
-                            prayerTimings['data']['timings']['Sunrise']),
-                        _buildPrayerTimeItem(Icons.wb_sunny_outlined, 'Dhuhr',
-                            prayerTimings['data']['timings']['Dhuhr']),
-                        _buildPrayerTimeItem(Icons.wb_twilight_outlined, 'Asr',
-                            prayerTimings['data']['timings']['Asr']),
+                            prayerTimings['data']['timings']['Sunrise'],
+                            prayerTimesProvider.beep1,
+                            true),
                         _buildPrayerTimeItem(
+                            prayerTimesProvider,
+                            Icons.wb_sunny_outlined,
+                            'Dhuhr',
+                            prayerTimings['data']['timings']['Dhuhr'],
+                            prayerTimesProvider.beep2,
+                            true),
+                        _buildPrayerTimeItem(
+                            prayerTimesProvider,
+                            Icons.wb_twilight_outlined,
+                            'Asr',
+                            prayerTimings['data']['timings']['Asr'],
+                            prayerTimesProvider.beep3,
+                            true),
+                        _buildPrayerTimeItem(
+                            prayerTimesProvider,
                             FlutterIslamicIcons.crescentMoon,
                             'Maghrib',
-                            prayerTimings['data']['timings']['Maghrib']),
-                        _buildPrayerTimeItem(FlutterIslamicIcons.mosque, 'Isha',
-                            prayerTimings['data']['timings']['Isha']),
+                            prayerTimings['data']['timings']['Maghrib'],
+                            prayerTimesProvider.beep4,
+                            true),
+                        _buildPrayerTimeItem(
+                            prayerTimesProvider,
+                            FlutterIslamicIcons.mosque,
+                            'Isha',
+                            prayerTimings['data']['timings']['Isha'],
+                            prayerTimesProvider.beep5,
+                            true),
                       ]),
                     ),
                   )
@@ -135,9 +161,23 @@ class PrayerTimesScreen extends StatelessWidget {
   }
 }
 
-Widget _buildPrayerTimeItem(IconData? icon, String name, String time) {
+Widget _buildPrayerTimeItem(
+  PrayerTimesProvider notifier,
+  IconData? icon,
+  String name,
+  String time,
+  bool isBeepSoundEnabled,
+  bool isAdhanSoundEnabled,
+) {
+  // Add icons for toggling beep sound and Adhan sound
+  final beepIcon =
+      isBeepSoundEnabled ? Icons.sensors : Icons.sensors_off_outlined;
+  final adhanIcon = isAdhanSoundEnabled
+      ? Icons.volume_up_outlined
+      : Icons.volume_off_outlined;
+
   return Padding(
-    padding: const EdgeInsets.only(left: 10, right: 80, top: 16, bottom: 16),
+    padding: const EdgeInsets.only(left: 10, right: 16, top: 16, bottom: 16),
     child: Row(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -155,7 +195,33 @@ Widget _buildPrayerTimeItem(IconData? icon, String name, String time) {
         Text(
           time,
           style: GoogleFonts.aBeeZee(
-              color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+              color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(
+          width: 30,
+        ),
+        // Icon for toggling beep sound
+        IconButton(
+          icon: Icon(
+            beepIcon,
+            size: 22,
+          ),
+          onPressed: () {
+            notifier.setBeepBool();
+            // Toggle beep sound
+            // Implement the logic to toggle the beep sound based on the prayer time
+          },
+        ),
+        // Icon for toggling Adhan sound
+        IconButton(
+          icon: Icon(
+            adhanIcon,
+            size: 22,
+          ),
+          onPressed: () {
+            // Toggle Adhan sound
+            // Implement the logic to toggle the Adhan sound based on the prayer time
+          },
         ),
       ],
     ),
@@ -185,8 +251,12 @@ Widget _buildDateItem(String name, String time) {
 }
 
 // Helper function to schedule notification for a prayer time
-void _schedulePrayerTimeNotification(PrayerTimesProvider notifier,
-    NotificationService notificationService, String prayerName, String time) {
+void _schedulePrayerTimeNotification(
+    PrayerTimesProvider notifier,
+    NotificationService notificationService,
+    String prayerName,
+    String time,
+    bool beep) {
   // Combine date and time strings
   String dateTimeString =
       '${notifier.prayerTimings['data']['date']['readable']} $time';
@@ -202,19 +272,19 @@ void _schedulePrayerTimeNotification(PrayerTimesProvider notifier,
 
     // Schedule notification 5 minutes before the prayer time
     notificationService.scheduleNotification(
-      id: prayerName.hashCode,
-      title: 'Prayer Time Reminder',
-      body: '5 minutes until $prayerName prayer',
-      scheduledDate: prayerTime.subtract(const Duration(minutes: 1)),
-    );
+        id: prayerName.hashCode,
+        title: 'Prayer Time Reminder',
+        body: '5 minutes until $prayerName prayer',
+        scheduledDate: prayerTime.subtract(const Duration(minutes: 1)),
+        beep: beep);
 
     // Schedule notification at the prayer time
     notificationService.scheduleNotification(
-      id: prayerName.hashCode + 1,
-      title: 'Prayer Time',
-      body: 'Is $prayerName prayer time',
-      scheduledDate: prayerTime,
-    );
+        id: prayerName.hashCode + 1,
+        title: 'Prayer Time',
+        body: 'Is $prayerName prayer time',
+        scheduledDate: prayerTime,
+        beep: beep);
   } catch (e) {
     // Handle parsing errors, e.g., invalid date or time format
     print('Error parsing date and time: $dateTimeString');
