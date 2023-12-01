@@ -4,102 +4,48 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:islamic_center_prayer_times/services/localnotifications.dart';
 // import 'package:islamic_center_prayer_times/prayer_models.dart';
 import 'package:islamic_center_prayer_times/services/prayertime_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart';
 
 class PrayerTimesProvider extends ChangeNotifier {
   final PrayerTimesService _prayerTimesService = PrayerTimesService();
-  // List<PrayerTime> _prayerTimes = [];
+// Initialize SharedPreferences instance
+  late SharedPreferences _prefs;
 
-  // List<PrayerTime> get prayerTimes => _prayerTimes;
-
-  // Future<void> fetchPrayerTimes() async {
-  //   final List<DateTime> prayerTimesData =
-  //       await _prayerTimesService.fetchPrayerTimes(
-  //     city: 'Cincinnati',
-  //     country: 'US',
-  //     year: 2023,
-  //     month: 11,
-  //   );
-  //   _prayerTimes = _convertToPrayerTimes(prayerTimesData);
-  //   print('My prayer time after converting ${prayerTimes.first.name}');
-  //   print('My prayer time before converting ${prayerTimesData.first}');
-  //   notifyListeners();
-  // }
-
-  // List<PrayerTime> _convertToPrayerTimes(List<DateTime> prayerTimesData) {
-  //   print('${prayerTimesData.length}');
-  //   // You can replace these with the actual prayer names in your language
-  //   final List<String> prayerNames = [
-  //     'Fajr',
-  //     'Sunrise',
-  //     'Dhuhr',
-  //     'Asr',
-  //     'Sunset',
-  //     'Maghrib',
-  //     'Isha',
-  //     'Imsak',
-  //     'Midnight',
-  //   ];
-
-  //   return List.generate(prayerTimesData.length, (index) {
-  //     final String name = prayerNames[index];
-  //     final DateTime time = prayerTimesData[index];
-  //     return PrayerTime(name: name, time: time);
-  //   });
-  // }
-
-  bool _beep = false;
-
-  bool get beep => _beep;
-
-  void setBeepBool() {
-    _beep = !_beep;
-    notifyListeners(); // Notify listeners when the selected index changes
+  PrayerTimesProvider() {
+    _initPrefs();
+    loadBeepStatus();
   }
 
-  bool _beep1 = false;
+  List<bool> beepstatus = List.generate(8, (index) => false);
 
-  bool get beep1 => _beep1;
-
-  void setBeep1Bool() {
-    _beep1 = !_beep1;
-    notifyListeners(); // Notify listeners when the selected index changes
+  // Initialize SharedPreferences
+  Future<void> _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  bool _beep2 = false;
-
-  bool get beep2 => _beep2;
-
-  void setBeep2Bool() {
-    _beep2 = !_beep2;
-    notifyListeners(); // Notify listeners when the selected index changes
+  // Load beep status from SharedPreferences
+  Future<void> loadBeepStatus() async {
+    for (int i = 0; i < beepstatus.length; i++) {
+      beepstatus[i] = _prefs.getBool('beepstatus_$i') ?? false;
+    }
+    notifyListeners();
   }
 
-  bool _beep3 = false;
-
-  bool get beep3 => _beep3;
-
-  void setBeep3Bool() {
-    _beep3 = !_beep3;
-    notifyListeners(); // Notify listeners when the selected index changes
+  // Save beep status to SharedPreferences
+  Future<void> _saveBeepStatus() async {
+    for (int i = 0; i < beepstatus.length; i++) {
+      await _prefs.setBool('beepstatus_$i', beepstatus[i]);
+    }
   }
 
-  bool _beep4 = false;
-
-  bool get beep4 => _beep4;
-
-  void setBeep4Bool() {
-    _beep4 = !_beep4;
+  void setBeepBool(int index) {
+    beepstatus[index] = !beepstatus[index];
     notifyListeners(); // Notify listeners when the selected index changes
-  }
-
-  bool _beep5 = false;
-  bool get beep5 => _beep5;
-
-  void setBeep5Bool() {
-    _beep5 = !_beep5;
-    notifyListeners(); // Notify listeners when the selected index changes
+    _saveBeepStatus();
   }
 
   int _bottomsheetIndex = 0;
@@ -138,5 +84,60 @@ class PrayerTimesProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // Helper function to schedule notification for a prayer time
+  void schedulePrayerTimeNotification(
+      String prayerName, String time, bool beep) {
+    // Combine date and time strings
+    String dateTimeString =
+        '${prayerTimings['data']['date']['readable']} $time';
+
+    try {
+      DateTime parsedDateTime =
+          DateFormat('dd MMM yyyy HH:mm').parse(dateTimeString);
+      TZDateTime prayerTime = TZDateTime.from(
+        parsedDateTime,
+        getLocation(prayerTimings['data']['meta']
+            ['timezone']), // Assuming you have a function to get the location
+      );
+
+      // Schedule notification 5 minutes before the prayer time
+      scheduleNotification(
+          id: prayerName.hashCode,
+          title: 'Prayer Time Reminder',
+          body: '5 minutes until $prayerName prayer',
+          scheduledDate: prayerTime.subtract(const Duration(minutes: 1)),
+          beep: beep);
+
+      // Schedule notification at the prayer time
+      scheduleNotification(
+          id: prayerName.hashCode + 1,
+          title: 'Prayer Time',
+          body: 'Is $prayerName prayer time',
+          scheduledDate: prayerTime,
+          beep: beep);
+    } catch (e) {
+      // Handle parsing errors, e.g., invalid date or time format
+      print('Error parsing date and time: $dateTimeString');
+    }
+    // Parse the combined string to get TZDateTime
+  }
+
+  // Helper function to schedule a single notification
+  void scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required TZDateTime scheduledDate,
+    required bool beep,
+  }) {
+    // Call your notification service to schedule the notification here
+    NotificationService().scheduleNotification(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        beep: beep);
   }
 }

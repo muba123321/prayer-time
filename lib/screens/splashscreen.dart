@@ -25,7 +25,10 @@ class SplashScreenState extends State<SplashScreen> {
   Future<void> _checkOnboardingStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool onboardingCompleted = prefs.getBool('onboarding') ?? false;
+
     await prayerTimesProvider.fetchPrayerTimingsByAddress();
+    await prayerTimesProvider
+        .loadBeepStatus(); // Load beep status before fetching prayer timings
     await Future.delayed(
         const Duration(seconds: 2)); // Simulating a splash screen delay
     if (context.mounted) {

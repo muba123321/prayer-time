@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:islamic_center_prayer_times/providers/prayertimes_provider.dart';
-import 'package:islamic_center_prayer_times/services/localnotifications.dart';
 import 'package:provider/provider.dart';
-import 'package:timezone/timezone.dart';
 
 class PrayerTimesScreen extends StatelessWidget {
   const PrayerTimesScreen({
@@ -15,7 +12,6 @@ class PrayerTimesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final prayerTimesProvider = Provider.of<PrayerTimesProvider>(context);
-    final notificationService = NotificationService();
     return
         // appBar: AppBar(
         //   title: const Text('Prayer Times'),
@@ -43,39 +39,6 @@ class PrayerTimesScreen extends StatelessWidget {
           builder: (context, prayerTimesProvider, child) {
             if (prayerTimesProvider.prayerTimings.isNotEmpty) {
               final prayerTimings = prayerTimesProvider.prayerTimings;
-
-              // Schedule notification for each prayer time
-              _schedulePrayerTimeNotification(
-                  prayerTimesProvider,
-                  notificationService,
-                  'Fajr',
-                  prayerTimings['data']['timings']['Fajr'],
-                  prayerTimesProvider.beep);
-              _schedulePrayerTimeNotification(
-                  prayerTimesProvider,
-                  notificationService,
-                  'Dhuhr',
-                  prayerTimings['data']['timings']['Dhuhr'],
-                  prayerTimesProvider.beep);
-              _schedulePrayerTimeNotification(
-                  prayerTimesProvider,
-                  notificationService,
-                  'Asr',
-                  prayerTimings['data']['timings']['Asr'],
-                  prayerTimesProvider.beep);
-              _schedulePrayerTimeNotification(
-                  prayerTimesProvider,
-                  notificationService,
-                  'Maghrib',
-                  prayerTimings['data']['timings']['Maghrib'],
-                  prayerTimesProvider.beep);
-              _schedulePrayerTimeNotification(
-                  prayerTimesProvider,
-                  notificationService,
-                  'Isha',
-                  prayerTimings['data']['timings']['Isha'],
-                  prayerTimesProvider.beep);
-              // ... Schedule notifications for other prayer times
               return Column(
                 children: [
                   Padding(
@@ -94,60 +57,64 @@ class PrayerTimesScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: const Color(0xFF772f30),
-                            width: 2,
-                            style: BorderStyle.solid,
-                            strokeAlign: BorderSide.strokeAlignOutside,
-                          ),
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Column(children: [
-                        _buildPrayerTimeItem(
-                            prayerTimesProvider,
-                            FlutterIslamicIcons.lantern,
-                            'Fajr',
-                            prayerTimings['data']['timings']['Fajr'],
-                            prayerTimesProvider.beep,
-                            true),
-                        _buildPrayerTimeItem(
-                            prayerTimesProvider,
-                            Icons.wb_twilight_outlined,
-                            'Sunrise',
-                            prayerTimings['data']['timings']['Sunrise'],
-                            prayerTimesProvider.beep1,
-                            true),
-                        _buildPrayerTimeItem(
-                            prayerTimesProvider,
-                            Icons.wb_sunny_outlined,
-                            'Dhuhr',
-                            prayerTimings['data']['timings']['Dhuhr'],
-                            prayerTimesProvider.beep2,
-                            true),
-                        _buildPrayerTimeItem(
-                            prayerTimesProvider,
-                            Icons.wb_twilight_outlined,
-                            'Asr',
-                            prayerTimings['data']['timings']['Asr'],
-                            prayerTimesProvider.beep3,
-                            true),
-                        _buildPrayerTimeItem(
-                            prayerTimesProvider,
-                            FlutterIslamicIcons.crescentMoon,
-                            'Maghrib',
-                            prayerTimings['data']['timings']['Maghrib'],
-                            prayerTimesProvider.beep4,
-                            true),
-                        _buildPrayerTimeItem(
-                            prayerTimesProvider,
-                            FlutterIslamicIcons.mosque,
-                            'Isha',
-                            prayerTimings['data']['timings']['Isha'],
-                            prayerTimesProvider.beep5,
-                            true),
-                      ]),
-                    ),
+                        // height: 200,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: const Color(0xFF772f30),
+                              width: 2,
+                              style: BorderStyle.solid,
+                              strokeAlign: BorderSide.strokeAlignOutside,
+                            ),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(10),
+                          shrinkWrap: true,
+                          itemCount: prayerTimings['data']['timings'].length,
+                          itemBuilder: (context, index) {
+                            final excludedPrayerTimes = [
+                              'Sunset',
+                              'Midnight',
+                              'Firstthird',
+                              'Lastthird',
+                            ];
+
+                            final prayerTimeKey = prayerTimings['data']
+                                    ['timings']
+                                .keys
+                                .toList()[index];
+                            final prayerTimeValue =
+                                prayerTimings['data']['timings'][prayerTimeKey];
+
+                            print(prayerTimeKey);
+                            print(prayerTimeValue);
+
+                            if (excludedPrayerTimes.contains(prayerTimeKey)) {
+                              return const SizedBox
+                                  .shrink(); // Skip excluded prayer times
+                            }
+
+                            if (!excludedPrayerTimes.contains(prayerTimeKey)) {
+                              prayerTimesProvider
+                                  .schedulePrayerTimeNotification(
+                                prayerTimeKey,
+                                prayerTimeValue,
+                                prayerTimesProvider.beepstatus[index],
+                              );
+                            }
+
+                            return _buildPrayerTimeItem(
+                                prayerTimesProvider,
+                                getPrayerIcon(prayerTimeKey),
+                                prayerTimeKey,
+                                prayerTimeValue,
+                                index,
+                                prayerTimesProvider.beepstatus[index],
+                                true
+                                // notifier.adhanSoundEnabled,
+                                );
+                          },
+                        )),
                   )
                 ],
               );
@@ -161,11 +128,31 @@ class PrayerTimesScreen extends StatelessWidget {
   }
 }
 
+IconData getPrayerIcon(String prayerName) {
+  switch (prayerName) {
+    case 'Fajr':
+      return FlutterIslamicIcons.lantern;
+    case 'Sunrise':
+      return Icons.wb_twilight_outlined;
+    case 'Dhuhr':
+      return Icons.wb_sunny_outlined;
+    case 'Asr':
+      return Icons.wb_twilight_outlined;
+    case 'Maghrib':
+      return FlutterIslamicIcons.crescentMoon;
+    case 'Isha':
+      return FlutterIslamicIcons.mosque;
+    default:
+      return Icons.error_outline;
+  }
+}
+
 Widget _buildPrayerTimeItem(
   PrayerTimesProvider notifier,
   IconData? icon,
   String name,
   String time,
+  int index,
   bool isBeepSoundEnabled,
   bool isAdhanSoundEnabled,
 ) {
@@ -177,9 +164,8 @@ Widget _buildPrayerTimeItem(
       : Icons.volume_off_outlined;
 
   return Padding(
-    padding: const EdgeInsets.only(left: 10, right: 16, top: 16, bottom: 16),
+    padding: const EdgeInsets.only(top: 10),
     child: Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(icon),
@@ -207,7 +193,9 @@ Widget _buildPrayerTimeItem(
             size: 22,
           ),
           onPressed: () {
-            notifier.setBeepBool();
+            notifier.setBeepBool(index);
+
+            print(notifier.beepstatus);
             // Toggle beep sound
             // Implement the logic to toggle the beep sound based on the prayer time
           },
@@ -250,47 +238,7 @@ Widget _buildDateItem(String name, String time) {
   );
 }
 
-// Helper function to schedule notification for a prayer time
-void _schedulePrayerTimeNotification(
-    PrayerTimesProvider notifier,
-    NotificationService notificationService,
-    String prayerName,
-    String time,
-    bool beep) {
-  // Combine date and time strings
-  String dateTimeString =
-      '${notifier.prayerTimings['data']['date']['readable']} $time';
 
-  try {
-    DateTime parsedDateTime =
-        DateFormat('dd MMM yyyy HH:mm').parse(dateTimeString);
-    TZDateTime prayerTime = TZDateTime.from(
-      parsedDateTime,
-      getLocation(notifier.prayerTimings['data']['meta']
-          ['timezone']), // Assuming you have a function to get the location
-    );
-
-    // Schedule notification 5 minutes before the prayer time
-    notificationService.scheduleNotification(
-        id: prayerName.hashCode,
-        title: 'Prayer Time Reminder',
-        body: '5 minutes until $prayerName prayer',
-        scheduledDate: prayerTime.subtract(const Duration(minutes: 1)),
-        beep: beep);
-
-    // Schedule notification at the prayer time
-    notificationService.scheduleNotification(
-        id: prayerName.hashCode + 1,
-        title: 'Prayer Time',
-        body: 'Is $prayerName prayer time',
-        scheduledDate: prayerTime,
-        beep: beep);
-  } catch (e) {
-    // Handle parsing errors, e.g., invalid date or time format
-    print('Error parsing date and time: $dateTimeString');
-  }
-  // Parse the combined string to get TZDateTime
-}
 
 
 
