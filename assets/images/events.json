@@ -1,0 +1,39 @@
+[
+    {
+      "title": "Annual Community Gathering",
+      "description": "Join us for our annual community gathering. There will be food, fun, and activities for all ages.",
+      "start_date": "2024-06-20T10:00:00",
+      "end_date": "2024-06-20T14:00:00",
+      "image_url": "https://picsum.photos/200"
+    },
+    {
+      "title": "Charity Bake Sale",
+      "description": "Support our community by participating in our charity bake sale. All proceeds go to local shelters.",
+      "start_date": "2024-07-01T09:00:00",
+      "end_date": "2024-07-01T13:00:00",
+      "image_url": "https://picsum.photos/200"
+    },
+    {
+      "title": "Youth Sports Day",
+      "description": "A day of sports activities for the youth. Come and join us for some healthy competition.",
+      "start_date": "2024-07-15T08:00:00",
+      "end_date": "2024-07-15T12:00:00",
+      "image_url": "https://picsum.photos/200"
+    },
+
+    {
+      "title": "Youth Sports Day",
+      "description": "A day of sports activities for the youth. Come and join us for some healthy competition.",
+      "start_date": "2024-07-15T08:00:00",
+      "end_date": "2024-07-15T12:00:00",
+      "image_url": "https://picsum.photos/200"
+    },
+    {
+      "title": "Youth Sports Day",
+      "description": "A day of sports activities for the youth. Come and join us for some healthy competition.",
+      "start_date": "2024-07-15T08:00:00",
+      "end_date": "2024-07-15T12:00:00",
+      "image_url": "https://picsum.photos/200"
+    }
+  ]
+  

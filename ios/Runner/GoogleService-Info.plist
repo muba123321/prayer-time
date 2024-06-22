@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBkcg3DK9y-VQxpkY8Ebk5bVq5UpJ5lrO0</string>
+	<string>AIzaSyCtJg_0Jf6x1jcg0XRAlMmYP6DdFpH2Smk</string>
 	<key>GCM_SENDER_ID</key>
-	<string>247960570637</string>
+	<string>448069139837</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.islamicCenterPrayerTimes</string>
+	<string>com.example.gicc</string>
 	<key>PROJECT_ID</key>
-	<string>prayer-times-1c62a</string>
+	<string>gicc-f1622</string>
 	<key>STORAGE_BUCKET</key>
-	<string>prayer-times-1c62a.appspot.com</string>
+	<string>gicc-f1622.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:247960570637:ios:7b7314351660660b43fe44</string>
+	<string>1:448069139837:ios:c506452c4b2c6b95792014</string>
 </dict>
 </plist>

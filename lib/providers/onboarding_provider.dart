@@ -16,13 +16,7 @@ class OnboardingProvider extends ChangeNotifier {
   Future<void> finishOnboarding() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('onboarding', true);
-    // if (context.mounted) {
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(
-    //       builder: (context) => const PrayerTimesScreen(),
-    //     ),
-    //   );
-    // }
+
     notifyListeners();
   }
 

@@ -1,12 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:islamic_center_prayer_times/firebase_options.dart';
-
-import 'package:islamic_center_prayer_times/providers/onboarding_provider.dart';
-import 'package:islamic_center_prayer_times/providers/prayertimes_provider.dart';
-import 'package:islamic_center_prayer_times/screens/splashscreen.dart';
-import 'package:islamic_center_prayer_times/services/localnotifications.dart';
+import 'package:gicc/firebase_options.dart';
+import 'package:gicc/providers/auth_provider.dart';
+import 'package:gicc/providers/onboarding_provider.dart';
+import 'package:gicc/providers/prayertimes_provider.dart';
+import 'package:gicc/providers/qibla_provider.dart';
+import 'package:gicc/screens/splashscreen.dart';
+import 'package:gicc/services/localnotifications.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -17,15 +18,7 @@ Future<void> main() async {
   );
   NotificationService().initNotification;
   tz.initializeTimeZones();
-  // Initialize the local notifications plugin
-  // const AndroidInitializationSettings initializationSettingsAndroid =
-  //     AndroidInitializationSettings('app_icon');
-  // const InitializationSettings initializationSettings =
-  //     InitializationSettings(android: initializationSettingsAndroid);
-  // await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-  //     onSelectNotification: (String? payload) async {
-  //   // Handle notification selection
-  // });
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(const MyApp()));
 }
@@ -39,7 +32,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PrayerTimesProvider()),
+        ChangeNotifierProvider(create: (_) => QiblaProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         // Add other providers here
       ],
       child: MaterialApp(

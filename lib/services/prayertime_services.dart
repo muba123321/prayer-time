@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 
 class PrayerTimesService {
   static const String apiUrl = 'http://api.aladhan.com/v1/timingsByAddress';
-
+  static const String apiUrlCalender =
+      'http://api.aladhan.com/v1/calendarByAddress';
   Future<Map<String, dynamic>> fetchTimingsByAddress({
     required String date,
     required String address,
@@ -137,5 +138,40 @@ class PrayerTimesService {
 
     //   return prayerTimes;
     // }
+  }
+
+  Future<Map<String, dynamic>> fetchMonthlyTimingsByAddress({
+    required int year,
+    required int month,
+    required String address,
+    int method = 2,
+    String shafaq = 'general',
+    String tune = '0, 0 , -1, 0, 0, 3, 0, 0, 0,',
+    int school = 0,
+    int midnightMode = 0,
+    int latitudeAdjustmentMethod = 3,
+    int adjustment = 0,
+    bool iso8601 = false,
+  }) async {
+    final Uri uri = Uri.parse(
+      '$apiUrlCalender/$year/$month?address=$address&method=$method'
+      '&shafaq=$shafaq&tune=$tune&school=$school&midnightMode=$midnightMode'
+      '&latitudeAdjustmentMethod=$latitudeAdjustmentMethod&adjustment=$adjustment&iso8601=$iso8601',
+    );
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> prayerTimings = json.decode(response.body);
+        return prayerTimings;
+      } else {
+        throw Exception('Failed to fetch monthly prayer times by address');
+      }
+    } catch (error) {
+      throw Exception(
+        'Failed to connect to the API. Check your internet connection. $error',
+      );
+    }
   }
 }

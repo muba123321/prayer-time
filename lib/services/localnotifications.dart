@@ -61,7 +61,7 @@ class NotificationService {
       enableVibration: true,
       vibrationPattern: Int64List.fromList([500, 1000, 500, 2000]),
       playSound: beep,
-      icon: 'logos',
+      icon: 'gaskia',
     );
 
     var iOSPlatformChannelSpecifics = DarwinNotificationDetails(

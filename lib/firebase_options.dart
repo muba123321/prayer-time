@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,37 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCgBXPTNtQuOug4bmfBfIbhdsnqLZeHhrk',
-    appId: '1:247960570637:web:4d492da964e3e11143fe44',
-    messagingSenderId: '247960570637',
-    projectId: 'prayer-times-1c62a',
-    authDomain: 'prayer-times-1c62a.firebaseapp.com',
-    storageBucket: 'prayer-times-1c62a.appspot.com',
+    apiKey: 'AIzaSyAAWl8YRRjPu5BjOnmOjijrpc2qi2QFDSY',
+    appId: '1:448069139837:web:ddad334e4cdb062d792014',
+    messagingSenderId: '448069139837',
+    projectId: 'gicc-f1622',
+    authDomain: 'gicc-f1622.firebaseapp.com',
+    storageBucket: 'gicc-f1622.appspot.com',
+    measurementId: 'G-47PQWPXJMQ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBLqQmipkmIxe19uiN9eiCDEmNhAyicsk8',
-    appId: '1:247960570637:android:39a1b692395f592043fe44',
-    messagingSenderId: '247960570637',
-    projectId: 'prayer-times-1c62a',
-    storageBucket: 'prayer-times-1c62a.appspot.com',
+    apiKey: 'AIzaSyBJgTxMgk2o6tNSFo02blQlOTxS6hW1ZWI',
+    appId: '1:448069139837:android:868fe857e93ff9a7792014',
+    messagingSenderId: '448069139837',
+    projectId: 'gicc-f1622',
+    storageBucket: 'gicc-f1622.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBkcg3DK9y-VQxpkY8Ebk5bVq5UpJ5lrO0',
-    appId: '1:247960570637:ios:7b7314351660660b43fe44',
-    messagingSenderId: '247960570637',
-    projectId: 'prayer-times-1c62a',
-    storageBucket: 'prayer-times-1c62a.appspot.com',
-    iosBundleId: 'com.example.islamicCenterPrayerTimes',
+    apiKey: 'AIzaSyCtJg_0Jf6x1jcg0XRAlMmYP6DdFpH2Smk',
+    appId: '1:448069139837:ios:c506452c4b2c6b95792014',
+    messagingSenderId: '448069139837',
+    projectId: 'gicc-f1622',
+    storageBucket: 'gicc-f1622.appspot.com',
+    iosBundleId: 'com.example.gicc',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBkcg3DK9y-VQxpkY8Ebk5bVq5UpJ5lrO0',
-    appId: '1:247960570637:ios:985eecaa53e9bddf43fe44',
-    messagingSenderId: '247960570637',
-    projectId: 'prayer-times-1c62a',
-    storageBucket: 'prayer-times-1c62a.appspot.com',
-    iosBundleId: 'com.example.islamicCenterPrayerTimes.RunnerTests',
+    apiKey: 'AIzaSyCtJg_0Jf6x1jcg0XRAlMmYP6DdFpH2Smk',
+    appId: '1:448069139837:ios:d3a0c726f313a6a8792014',
+    messagingSenderId: '448069139837',
+    projectId: 'gicc-f1622',
+    storageBucket: 'gicc-f1622.appspot.com',
+    iosBundleId: 'com.example.islamicCenterPrayerTimes',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAAWl8YRRjPu5BjOnmOjijrpc2qi2QFDSY',
+    appId: '1:448069139837:web:b18fcc14073b00d4792014',
+    messagingSenderId: '448069139837',
+    projectId: 'gicc-f1622',
+    authDomain: 'gicc-f1622.firebaseapp.com',
+    storageBucket: 'gicc-f1622.appspot.com',
+    measurementId: 'G-PCVMVZPBWJ',
+  );
+
 }

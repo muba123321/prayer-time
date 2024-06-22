@@ -12,26 +12,28 @@ class FeatureListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 30,
-            color: Colors.white,
-          ),
-          const SizedBox(width: 10.0),
-          Container(
-            color: Colors.black.withOpacity(0.6),
-            child: Text(
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(16)),
+        padding: const EdgeInsets.all(7),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(
+              icon,
+              size: 30,
+              color: Colors.black,
+            ),
+            Text(
               description,
               style: GoogleFonts.aBeeZee(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

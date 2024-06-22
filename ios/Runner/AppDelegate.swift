@@ -12,7 +12,8 @@ import flutter_local_notifications
 
     FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
     GeneratedPluginRegistrant.register(with: registry)}
-
+    
+    GMSServices.provideAPIKey("MAPS_KEY")
     GeneratedPluginRegistrant.register(with: self)
 
       if #available(iOS 10.0, *) {
