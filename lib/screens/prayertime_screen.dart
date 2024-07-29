@@ -285,12 +285,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     return Stack(
       children: [
         Container(
-          decoration: const BoxDecoration(
-              // image: DecorationImage(
-              //   // image: AssetImage('assets/images/background.jpg'),
-              //   fit: BoxFit.cover,
-              // ),
-              ),
+          decoration: const BoxDecoration(),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -393,10 +388,6 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
 
     final prayerName = provider.todayOngoingPrayer.keys.first;
     final prayerTime = provider.todayOngoingPrayer.values.first;
-    // final upcomingPrayer = provider.todayOngoingPrayer;
-    // log('this is ....... ${upcomingPrayer.keys.first}');
-    // final prayerName = upcomingPrayer.keys.first;
-    // final prayerTime = upcomingPrayer.values.first;
 
     return Stack(
       children: [
@@ -592,7 +583,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
       case 'Isha':
         return FlutterIslamicIcons.mosque;
       default:
-        return Icons.error_outline;
+        return FlutterIslamicIcons.prayer;
     }
   }
 }

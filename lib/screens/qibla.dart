@@ -37,7 +37,7 @@ class QiblaScreenState extends State<QiblaScreen> {
           }
 
           if (snapshot.data!) {
-            log('This is maon qibla page${snapshot.data.toString()}');
+            log('This is main qibla page${snapshot.data.toString()}');
             return Stack(
               clipBehavior: Clip.hardEdge,
               children: [

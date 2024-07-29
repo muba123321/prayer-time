@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gicc/models/event_model.dart';
+import 'package:gicc/providers/events_provider.dart';
+import 'package:provider/provider.dart';
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({super.key});
@@ -11,57 +11,32 @@ class EventsScreen extends StatefulWidget {
 }
 
 class EventsScreenState extends State<EventsScreen> {
-  List<EventModel> events = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadEvents();
-  }
-
-  Future<void> loadEvents() async {
-    final String response =
-        await rootBundle.loadString('assets/images/events.json');
-
-    final data = await json.decode(response) as List;
-    setState(() {
-      events = data.map((json) => EventModel.fromJson(json)).toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: events.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 4 / 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                ),
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  final event = events[index];
-                  // if (index == 0) {
-                  //   return
-                  //       // Column(
-                  //       //   children: [
-                  //       Expanded(
-                  //     child: EventCard(event: event),
-                  //   );
-                  //   // const SizedBox(height: 8),
-                  //   //   ],
-                  //   // );
-                  // }
-                  return EventCard(event: event);
-                },
-              ),
-            ),
-    );
+        body: Consumer<EventProvider>(builder: (context, eventProvider, child) {
+      final events = eventProvider.events;
+      if (events.isEmpty) {
+        return const Center(child: Text('No events available'));
+      }
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            childAspectRatio: 4 / 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            final event = events[index];
+
+            return EventCard(event: event);
+          },
+        ),
+      );
+    }));
   }
 }
 

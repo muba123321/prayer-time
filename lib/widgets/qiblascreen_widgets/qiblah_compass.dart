@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'dart:math' show pi;
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gicc/widgets/qiblascreen_widgets/loading_error.dart';
 import 'package:gicc/widgets/qiblascreen_widgets/loading_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class QiblahCompass extends StatefulWidget {
   const QiblahCompass({super.key});
@@ -83,6 +85,32 @@ class QiblahCompassState extends State<QiblahCompass> {
   //   );
   // }
 
+  Future<void> _checkLocationStatus() async {
+    final locationStatus = await FlutterQiblah.checkLocationStatus();
+    log('Checking location status');
+    log('Location status: ${locationStatus.enabled}, ${locationStatus.status}');
+    if (locationStatus.enabled &&
+        locationStatus.status == LocationPermission.denied) {
+      log('Requesting permissions');
+      log('This is the status ${locationStatus.status}');
+      log('This is the enabled ${locationStatus.enabled}');
+      await FlutterQiblah.requestPermissions();
+      final s = await FlutterQiblah.checkLocationStatus();
+      _locationStreamController.sink.add(s);
+    } else if (locationStatus.enabled &&
+        locationStatus.status == LocationPermission.deniedForever) {
+    } else {
+      _locationStreamController.sink.add(locationStatus);
+    }
+  }
+
+  void openSettings() async {
+    bool opened = await openAppSettings();
+    if (opened) {
+      _checkLocationStatus();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -103,11 +131,12 @@ class QiblahCompassState extends State<QiblahCompass> {
               case LocationPermission.denied:
                 return LocationErrorWidget(
                   error: "Location service permission denied",
-                  callback: _checkLocationStatus,
+                  callback: openSettings,
                 );
               case LocationPermission.deniedForever:
                 return LocationErrorWidget(
-                  error: "Location service Denied Forever !",
+                  error:
+                      "Location service Denied Forever. Click retry to edit!",
                   callback: _checkLocationStatus,
                 );
               // case GeolocationStatus.unknown:
@@ -131,17 +160,27 @@ class QiblahCompassState extends State<QiblahCompass> {
     );
   }
 
-  Future<void> _checkLocationStatus() async {
-    final locationStatus = await FlutterQiblah.checkLocationStatus();
-    if (locationStatus.enabled &&
-        locationStatus.status == LocationPermission.denied) {
-      await FlutterQiblah.requestPermissions();
-      final s = await FlutterQiblah.checkLocationStatus();
-      _locationStreamController.sink.add(s);
-    } else {
-      _locationStreamController.sink.add(locationStatus);
-    }
-  }
+  // Future<void> _checkLocationStatus() async {
+  //   try {
+  //     log('Checking location status');
+  //     final locationStatus = await FlutterQiblah.checkLocationStatus();
+  //     log('Location status: ${locationStatus.enabled}, ${locationStatus.status}');
+
+  //     if (locationStatus.enabled &&
+  //         locationStatus.status == LocationPermission.denied) {
+  //       log('Requesting permissions');
+  //       await FlutterQiblah.requestPermissions();
+  //       final s = await FlutterQiblah.checkLocationStatus();
+  //       log('Updated location status after requesting permissions: ${s.enabled}, ${s.status}');
+  //       _locationStreamController.sink.add(s);
+  //     } else {
+  //       log('Adding location status to stream');
+  //       _locationStreamController.sink.add(locationStatus);
+  //     }
+  //   } catch (e) {
+  //     log('Error checking location status: $e');
+  //   }
+  // }
 }
 
 class QiblahCompassWidget extends StatefulWidget {
@@ -282,87 +321,3 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
     );
   }
 }
-
-// class QiblahCompassWidget extends StatefulWidget {
-//   const QiblahCompassWidget({super.key});
-
-//   @override
-//   State<QiblahCompassWidget> createState() => _QiblahCompassWidgetState();
-// }
-
-// class _QiblahCompassWidgetState extends State<QiblahCompassWidget> {
-//   final _compassSvg = SvgPicture.asset('assets/images/compass.svg');
-
-//   final _needleSvg = SvgPicture.asset(
-//     'assets/images/needle.svg',
-//     fit: BoxFit.contain,
-//     height: 300,
-//     alignment: Alignment.center,
-//   );
-
-//   Color _buttonColor = Colors.green;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder(
-//       stream: FlutterQiblah.qiblahStream,
-//       builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return const LoadingIndicator();
-//         }
-
-//         final qiblahDirection = snapshot.data!;
-
-//         final angle = qiblahDirection.qiblah * (pi / 180) * -1;
-//         // (qiblahDirection.qiblah - qiblahDirection.direction).abs();
-
-//         WidgetsBinding.instance.addPostFrameCallback((_) {
-//           log('$angle');
-//           _updateButtonColor(angle);
-//         });
-
-//         return Stack(
-//           alignment: Alignment.center,
-//           children: <Widget>[
-//             Transform.rotate(
-//               angle: (qiblahDirection.direction * (pi / 180) * -1),
-//               child: _compassSvg,
-//             ),
-//             Transform.rotate(
-//               angle: (qiblahDirection.qiblah * (pi / 180) * -1),
-//               alignment: Alignment.center,
-//               child: _needleSvg,
-//             ),
-//             Positioned(
-//               bottom: 40,
-//               child: ElevatedButton(
-//                 onPressed: () {},
-//                 style: ElevatedButton.styleFrom(
-//                   foregroundColor:
-//                       _buttonColor, // Set button color based on the difference
-//                 ),
-//                 child: const Text('Calibrate'),
-//               ),
-//             ),
-//             Positioned(
-//               bottom: 8,
-//               child: Text("${qiblahDirection.offset.toStringAsFixed(3)}°"),
-//             )
-//           ],
-//         );
-//       },
-//     );
-//   }
-
-//   void _updateButtonColor(double difference) {
-//     setState(() {
-//       if (difference < 10) {
-//         _buttonColor = Colors.green;
-//       } else if (difference < 20) {
-//         _buttonColor = Colors.yellow;
-//       } else {
-//         _buttonColor = Colors.red;
-//       }
-//     });
-//   }
-// }

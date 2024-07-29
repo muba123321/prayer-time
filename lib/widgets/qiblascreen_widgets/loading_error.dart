@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 class LocationErrorWidget extends StatelessWidget {
   final String? error;
-  final Function? callback;
+  final VoidCallback callback;
 
-  const LocationErrorWidget({Key? key, this.error, this.callback})
-      : super(key: key);
+  const LocationErrorWidget({super.key, this.error, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +28,7 @@ class LocationErrorWidget extends StatelessWidget {
                   color: errorColor, fontWeight: FontWeight.bold),
             ),
             box,
-            ElevatedButton(
-              child: const Text("Retry"),
-              onPressed: () {
-                if (callback != null) callback!();
-              },
-            )
+            ElevatedButton(onPressed: callback, child: const Text("Retry"))
           ],
         ),
       ),

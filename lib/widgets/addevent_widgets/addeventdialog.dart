@@ -1,10 +1,11 @@
-import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:gicc/providers/events_provider.dart';
 import 'package:gicc/widgets/resusable_widgets/customtextformfield.dart';
 import 'package:gicc/widgets/resusable_widgets/datetimepicker_widget.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class AddEventDialog extends StatefulWidget {
   const AddEventDialog({super.key});
@@ -14,79 +15,21 @@ class AddEventDialog extends StatefulWidget {
 }
 
 class AddEventDialogState extends State<AddEventDialog> {
-  final _formKey = GlobalKey<FormState>();
-  File? _image;
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _locationController = TextEditingController();
-  DateTime? _startDate;
-  DateTime? _endDate;
-  TimeOfDay? _startTime;
-  TimeOfDay? _endTime;
-
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      }
-    });
-  }
-
-  Future<void> _pickDate(BuildContext context,
-      {required bool isStartDate}) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-    );
-    if (pickedDate != null &&
-        pickedDate != _startDate &&
-        pickedDate != _endDate)
-      setState(() {
-        if (isStartDate) {
-          _startDate = pickedDate;
-        } else {
-          _endDate = pickedDate;
-        }
-      });
-  }
-
-  Future<void> _pickTime(BuildContext context,
-      {required bool isStartTime}) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (pickedTime != null &&
-        pickedTime != _startTime &&
-        pickedTime != _endTime)
-      setState(() {
-        if (isStartTime) {
-          _startTime = pickedTime;
-        } else {
-          _endTime = pickedTime;
-        }
-      });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final eventnotifier = context.watch<EventProvider>();
     return AlertDialog(
       title: Text('Add Event', style: GoogleFonts.aBeeZee()),
       content: SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: eventnotifier.formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: () {
-                  _pickImage();
+                  eventnotifier.pickImage();
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
@@ -119,9 +62,9 @@ class AddEventDialogState extends State<AddEventDialog> {
               const SizedBox(
                 height: 16,
               ),
-              if (_image != null)
+              if (eventnotifier.image != null)
                 Image.file(
-                  _image!,
+                  eventnotifier.image!,
                   width: 100,
                   height: 100,
                 ),
@@ -130,7 +73,7 @@ class AddEventDialogState extends State<AddEventDialog> {
                 child: Column(
                   children: [
                     CustomTextFormField(
-                      controller: _titleController,
+                      controller: eventnotifier.titleController,
                       hintText: 'Title',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -143,7 +86,7 @@ class AddEventDialogState extends State<AddEventDialog> {
                       height: 6,
                     ),
                     CustomTextFormField(
-                      controller: _descriptionController,
+                      controller: eventnotifier.descriptionController,
                       hintText: 'Description',
                       maxlines: 4,
                       validator: (value) {
@@ -157,7 +100,7 @@ class AddEventDialogState extends State<AddEventDialog> {
                       height: 6,
                     ),
                     CustomTextFormField(
-                      controller: _locationController,
+                      controller: eventnotifier.locationController,
                       hintText: 'Location',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -174,18 +117,22 @@ class AddEventDialogState extends State<AddEventDialog> {
               ),
               DateTimePickerWidget(
                 label: 'Start Date and Time',
-                selectedDate: _startDate,
-                selectedTime: _startTime,
-                onDateTap: () => _pickDate(context, isStartDate: true),
-                onTimeTap: () => _pickTime(context, isStartTime: true),
+                selectedDate: eventnotifier.startDate,
+                selectedTime: eventnotifier.startTime,
+                onDateTap: () =>
+                    eventnotifier.pickDate(context, isStartDate: true),
+                onTimeTap: () =>
+                    eventnotifier.pickTime(context, isStartTime: true),
               ),
               const SizedBox(height: 16),
               DateTimePickerWidget(
                 label: 'End Date and Time',
-                selectedDate: _endDate,
-                selectedTime: _endTime,
-                onDateTap: () => _pickDate(context, isStartDate: false),
-                onTimeTap: () => _pickTime(context, isStartTime: false),
+                selectedDate: eventnotifier.endDate,
+                selectedTime: eventnotifier.endTime,
+                onDateTap: () =>
+                    eventnotifier.pickDate(context, isStartDate: false),
+                onTimeTap: () =>
+                    eventnotifier.pickTime(context, isStartTime: false),
               ),
             ],
           ),
@@ -198,8 +145,9 @@ class AddEventDialogState extends State<AddEventDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_formKey.currentState?.validate() ?? false) {
+            if (eventnotifier.formKey.currentState?.validate() ?? false) {
               // Handle the submit action
+              eventnotifier.addEvent();
               Navigator.of(context).pop();
             }
           },

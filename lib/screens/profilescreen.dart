@@ -13,9 +13,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
-  final String address = '123 Islamic Center St, City, Country';
-  final String phoneNumber = '+1234567890';
-  final String email = 'info@islamiccenter.com';
+  final String address = 'E Broad St & N High St, Columbus, OH 43215';
+  final String phoneNumber = '+6404567890';
+  final String email = 'info@gaskiaislamiccenter.com';
 
   void _launchURL(String url) async {
     if (await launchUrl(Uri.parse(url))) {
@@ -23,6 +23,12 @@ class ProfileScreenState extends State<ProfileScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void _launchMap() {
+    final query = Uri.encodeComponent(address);
+    final url = 'geo:0,0?q=$query';
+    _launchURL(url);
   }
 
   @override
@@ -105,6 +111,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             leading: const Icon(Icons.location_on),
             minLeadingWidth: 0,
             title: Text(address),
+            onTap: () => _launchMap(),
           ),
           ListTile(
             visualDensity: VisualDensity.compact,

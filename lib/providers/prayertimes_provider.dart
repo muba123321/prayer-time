@@ -23,7 +23,7 @@ class PrayerTimesProvider extends ChangeNotifier {
     loadBeepStatus();
   }
 
-  List<bool> beepstatus = List.generate(8, (index) => false);
+  List<bool> beepstatus = List.generate(9, (index) => false);
 
   // Initialize SharedPreferences
   Future<void> _initPrefs() async {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gicc/firebase_options.dart';
 import 'package:gicc/providers/auth_provider.dart';
+import 'package:gicc/providers/events_provider.dart';
 import 'package:gicc/providers/onboarding_provider.dart';
 import 'package:gicc/providers/prayertimes_provider.dart';
 import 'package:gicc/providers/qibla_provider.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => QiblaProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => EventProvider()),
         // Add other providers here
       ],
       child: MaterialApp(
