@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gicc/models/event_model.dart';
 import 'package:gicc/providers/events_provider.dart';
+import 'package:gicc/widgets/event_widgets/modern_event_card.dart';
+import 'package:gicc/core/theme/design_system.dart';
 import 'package:provider/provider.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -14,86 +15,59 @@ class EventsScreenState extends State<EventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Consumer<EventProvider>(builder: (context, eventProvider, child) {
-      final events = eventProvider.events;
-      if (events.isEmpty) {
-        return const Center(child: Text('No events available'));
-      }
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1,
-            childAspectRatio: 4 / 2,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-          ),
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            final event = events[index];
+      body: Consumer<EventProvider>(
+        builder: (context, eventProvider, child) {
+          final events = eventProvider.events;
 
-            return EventCard(event: event);
-          },
-        ),
-      );
-    }));
-  }
-}
-
-class EventCard extends StatelessWidget {
-  final EventModel event;
-
-  const EventCard({super.key, required this.event});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16)),
-              child: Image.network(event.imageUrl, fit: BoxFit.cover)),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    event.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+          if (events.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.event_busy,
+                    size: 80,
+                    color: AppColors.textSecondary,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'No events available',
+                    style: AppTextStyles.titleLarge.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(event.description),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Start: ${event.startDate}',
-                    style: const TextStyle(color: Colors.grey),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'Check back later for upcoming events',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'End: ${event.endDate}',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ],
+                ],
+              ),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              // Add refresh functionality here if needed
+              await Future.delayed(const Duration(seconds: 1));
+            },
+            child: ListView.builder(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                final event = events[index];
+                return ModernEventCard(
+                  event: event,
+                  onTap: () {
+                    // TODO: Navigate to event details
+                  },
+                );
+              },
             ),
-          )
-        ],
+          );
+        },
       ),
     );
   }

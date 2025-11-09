@@ -34,7 +34,7 @@ class AddEventDialogState extends State<AddEventDialog> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: DottedBorder(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     dashPattern: const [8, 4],
                     strokeWidth: 8,
                     child: Container(

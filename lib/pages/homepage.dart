@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:gicc/core/theme/app_text_styles.dart';
 import 'package:gicc/providers/auth_provider.dart';
 import 'package:gicc/screens/qibla.dart';
 import 'package:gicc/widgets/addevent_widgets/addeventdialog.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:gicc/widgets/navigation/modern_bottom_navigation.dart';
+import 'package:gicc/widgets/navigation/quick_action_fab.dart';
 import 'package:gicc/providers/prayertimes_provider.dart';
 import 'package:gicc/screens/events.dart';
 import 'package:gicc/screens/profilescreen.dart';
 import 'package:gicc/screens/quran.dart';
 import 'package:gicc/screens/prayertime_screen.dart';
-import 'package:gicc/widgets/prayertimescreen_widgets/buttom_navigationbar.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -26,10 +27,10 @@ class HomePage extends StatelessWidget {
               appBarTitle = 'Prayer Times';
               break;
             case 1:
-              appBarTitle = 'Qibla';
+              appBarTitle = 'Qibla Direction';
               break;
             case 2:
-              appBarTitle = 'Events';
+              appBarTitle = 'Community Events';
               break;
             case 3:
               appBarTitle = 'Quran';
@@ -38,7 +39,7 @@ class HomePage extends StatelessWidget {
               appBarTitle = 'Profile';
               break;
             default:
-              appBarTitle = 'Prayer Times';
+              appBarTitle = 'GICC';
               break;
           }
 
@@ -66,16 +67,16 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 16.0, top: 16),
                 child: Text(
                   "GICC",
-                  style: GoogleFonts.anton(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 25),
+                  style: AppTextStyles.withColor(
+                    AppTextStyles.headlineSmall,
+                    Theme.of(context).appBarTheme.foregroundColor!,
+                  ),
                 ),
               ),
               centerTitle: true,
               title: Text(
                 appBarTitle,
-                style: GoogleFonts.aBeeZee(color: Colors.white),
+                style: Theme.of(context).appBarTheme.titleTextStyle,
               ),
               actions: appBarTitle == 'Events' && usernotifier.user != null
                   ? [
@@ -98,7 +99,6 @@ class HomePage extends StatelessWidget {
                               children: [
                                 const Icon(
                                   Icons.add,
-                                  color: Colors.white,
                                   size: 26,
                                 ),
                                 Expanded(
@@ -108,8 +108,14 @@ class HomePage extends StatelessWidget {
                                   ),
                                   child: Text(
                                     'Add Event',
-                                    style: GoogleFonts.aBeeZee(
-                                        color: Colors.white),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .appBarTheme
+                                              .foregroundColor,
+                                        ),
                                   ),
                                 ))
                               ],
@@ -119,20 +125,10 @@ class HomePage extends StatelessWidget {
                       ),
                     ]
                   : [],
-              // titleSpacing: 00.0,
-              toolbarHeight: 65.2,
-              toolbarOpacity: 0.8,
-              elevation: 0.00,
-              backgroundColor: const Color(0xFF005015),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(2),
-                    bottomLeft: Radius.circular(6)),
-              ),
             ),
-            backgroundColor: const Color(0xFFFFFFFF),
             body: body,
-            bottomNavigationBar: const ButtomNavigationBar(),
+            floatingActionButton: const QuickActionFab(),
+            bottomNavigationBar: const ModernBottomNavigation(),
           );
         });
   }

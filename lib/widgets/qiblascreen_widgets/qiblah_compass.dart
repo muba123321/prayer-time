@@ -3,12 +3,13 @@ import 'dart:developer';
 
 import 'dart:math' show pi;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gicc/widgets/qiblascreen_widgets/loading_error.dart';
 import 'package:gicc/widgets/qiblascreen_widgets/loading_indicator.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:gicc/core/theme/design_system.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class QiblahCompass extends StatefulWidget {
@@ -145,9 +146,6 @@ class QiblahCompassState extends State<QiblahCompass> {
                   error: "Unknown Location service error",
                   callback: _checkLocationStatus,
                 );
-
-              default:
-                return const SizedBox();
             }
           } else {
             return LocationErrorWidget(
@@ -270,21 +268,38 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
           return Stack(
             alignment: Alignment.center,
             children: <Widget>[
+              // Degree display at top
               Positioned(
                 top: 90,
-                bottom: 90,
-                child: Text(
-                  "${qiblahDirection.direction.toInt()}°",
-                  style: GoogleFonts.aBeeZee(
-                      color: const Color(0xFF005015),
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius:
+                        BorderRadius.circular(AppSpacing.borderRadiusLg),
+                    border: Border.all(
+                      color: AppColors.primary,
+                      width: 2,
+                    ),
+                  ),
+                  child: Text(
+                    "${qiblahDirection.direction.toInt()}°",
+                    style: AppTextStyles.headlineMedium.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                 ),
               ),
+              // Compass background with animation
               Transform.rotate(
                 angle: (qiblahDirection.direction * (pi / 180) * -1),
                 child: SvgPicture.asset('assets/images/compass.svg'),
               ),
+              // Animated needle
               AnimatedBuilder(
                 animation: _animation!,
                 builder: (context, child) => Transform.rotate(
@@ -297,20 +312,59 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
                   ),
                 ),
               ),
+              // Calibration button at bottom with modern styling
               Positioned(
                 bottom: 40,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _buttonColor, // Use the updated button color
-                  ),
-                  child: Text(
-                    'Calibrate to ${qiblahDirection.offset.toInt()}°',
-                    style: GoogleFonts.aBeeZee(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900),
+                child: Material(
+                  elevation: AppElevation.medium,
+                  borderRadius:
+                      BorderRadius.circular(AppSpacing.borderRadiusLg),
+                  child: InkWell(
+                    onTap: () {
+                      // Haptic feedback when tapped
+                      HapticFeedback.mediumImpact();
+                    },
+                    borderRadius:
+                        BorderRadius.circular(AppSpacing.borderRadiusLg),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.md,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _buttonColor,
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.borderRadiusLg),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _buttonColor.withValues(alpha: 0.4),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            (directionInt - offsetInt).abs() == 0
+                                ? Icons.done_all
+                                : Icons.adjust,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(
+                            (directionInt - offsetInt).abs() == 0
+                                ? 'Aligned with Qibla!'
+                                : 'Rotate ${qiblahDirection.offset.toInt()}°',
+                            style: AppTextStyles.bodyLarge.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -40,7 +40,7 @@ class CustomTextFormField extends StatelessWidget {
         hintStyle: GoogleFonts.aBeeZee(
             fontSize: 16,
             fontWeight: FontWeight.w900,
-            color: Colors.black.withOpacity(0.3)),
+            color: Colors.black.withValues(alpha: 0.3)),
         hintText: hintText,
         suffixIcon: suffixIcon,
         border: border ??
@@ -56,7 +56,7 @@ class CustomTextFormField extends StatelessWidget {
                 borderSide: BorderSide(
                     width: 2,
                     style: BorderStyle.solid,
-                    color: Colors.black.withOpacity(0.3)),
+                    color: Colors.black.withValues(alpha: 0.3)),
                 borderRadius: const BorderRadius.all(Radius.circular(12))),
         disabledBorder: enableborder ??
             const OutlineInputBorder(

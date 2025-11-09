@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gicc/firebase_options.dart';
+import 'package:gicc/core/theme/app_theme.dart';
 import 'package:gicc/providers/auth_provider.dart';
 import 'package:gicc/providers/events_provider.dart';
 import 'package:gicc/providers/onboarding_provider.dart';
@@ -41,10 +42,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Prayer Times App',
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
+        title: 'Gaskia Islamic Community Center',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
         home: const SplashScreen(),
       ),
     );

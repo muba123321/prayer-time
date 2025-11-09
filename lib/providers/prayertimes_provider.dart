@@ -142,7 +142,7 @@ class PrayerTimesProvider extends ChangeNotifier {
       log('this is it ........$_monthlyPrayerTimings');
       log('this is it the length........${_monthlyPrayerTimings.length}');
     } catch (error) {
-      print(error);
+      log('Error fetching monthly prayer timings: $error');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -243,7 +243,7 @@ class PrayerTimesProvider extends ChangeNotifier {
           beep: beep);
     } catch (e) {
       // Handle parsing errors, e.g., invalid date or time format
-      print('Error parsing date and time: $dateTimeString');
+      log('Error parsing date and time: $dateTimeString - $e');
     }
     // Parse the combined string to get TZDateTime
   }

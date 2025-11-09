@@ -75,7 +75,7 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                                     width: double.infinity,
                                     child: ElevatedButton(
                                       style: const ButtonStyle(
-                                          side: MaterialStatePropertyAll(
+                                          side: WidgetStatePropertyAll(
                                               BorderSide(
                                                   width: 2,
                                                   color: Color(0xFF005015)))),
@@ -103,7 +103,7 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
+                                      backgroundColor: WidgetStatePropertyAll(
                                           Color(0xFF005015)),
                                     ),
                                     onPressed: () {
@@ -113,14 +113,17 @@ class OnboardingScreenState extends State<OnboardingScreen> {
                                         context
                                             .read<OnboardingProvider>()
                                             .finishOnboarding()
-                                            .then((value) =>
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const HomePage(),
-                                                  ),
-                                                ));
+                                            .then((value) {
+                                          if (context.mounted) {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const HomePage(),
+                                              ),
+                                            );
+                                          }
+                                        });
                                       }
                                     },
                                     child: Center(

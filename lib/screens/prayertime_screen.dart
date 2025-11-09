@@ -258,10 +258,13 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:gicc/providers/prayertimes_provider.dart';
+import 'package:gicc/widgets/prayer_widgets/modern_prayer_card.dart';
+import 'package:gicc/widgets/prayer_widgets/modern_date_card.dart';
+import 'package:gicc/widgets/prayer_widgets/upcoming_prayer_widget.dart';
+import 'package:gicc/utils/prayer_time_helper.dart';
 
 class PrayerTimesScreen extends StatefulWidget {
   const PrayerTimesScreen({super.key});
@@ -358,111 +361,28 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     final formattedDate = DateFormat('dd-MM-yyyy').format(dateused);
     final todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-          color: formattedDate == todayDate
-              ? Colors.green.withOpacity(0.1)
-              : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(width: 2, color: const Color(0xFF005015))),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildDateItem('Date', date),
-              _buildDateItem('Hijri', hijriDate),
-            ],
-          ),
-        ],
-      ),
+    return ModernDateCard(
+      gregorianDate: date,
+      hijriDate: hijriDate,
+      isToday: formattedDate == todayDate,
     );
   }
 
   Widget _buildUpcomingPrayer(PrayerTimesProvider provider, index) {
     if (provider.todayOngoingPrayer.isEmpty) {
-      return const SizedBox
-          .shrink(); // Return an empty widget if no upcoming prayer
+      return const SizedBox.shrink();
     }
 
     final prayerName = provider.todayOngoingPrayer.keys.first;
     final prayerTime = provider.todayOngoingPrayer.values.first;
 
-    return Stack(
-      children: [
-        Image.asset(
-          "assets/images/gaskia.png",
-          height: 180,
-          width: 200,
-        ),
-        Positioned(
-          right: 0,
-          bottom: 20,
-          child: Container(
-            width: 160.7,
-            decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black, // Shadow color
-                    spreadRadius: 1, // Spread radius
-                    // blurRadius: 8, // Blur radius
-                    offset: Offset(0, -2), // Offset in x and y directions
-                  ),
-                ],
-                color: const Color(0xFF005015),
-                borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15, bottom: 15),
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Upcoming Prayer',
-                    style: GoogleFonts.aBeeZee(
-                      color: const Color(0xFFFFFFFF),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text(
-                    '$prayerName - $prayerTime',
-                    style: GoogleFonts.aBeeZee(
-                      color: const Color(0xFFFFFFFF),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+    // Calculate countdown using helper
+    final countdownText = PrayerTimeHelper.calculateCountdown(prayerTime);
 
-  Widget _buildDateItem(String name, String time) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          name,
-          style: GoogleFonts.aBeeZee(
-            color: const Color(0xFF005015),
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Text(
-          time,
-          style: GoogleFonts.aBeeZee(
-            color: Colors.black87,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
+    return UpcomingPrayerWidget(
+      prayerName: prayerName,
+      prayerTime: prayerTime,
+      countdown: countdownText,
     );
   }
 
@@ -511,60 +431,34 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     int index,
     bool isBeepSoundEnabled,
   ) {
-    return SizedBox(
-      height: 60,
-      child: Card(
-        // margin: const EdgeInsets.symmetric(vertical: 4),
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: 160,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(icon, color: const Color(0xFF005015)),
-                    const SizedBox(width: 16),
-                    Text(
-                      name,
-                      style: GoogleFonts.aBeeZee(
-                        color: const Color(0xFF005015),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // const SizedBox(height: 4),
-            Text(
-              time,
-              style: GoogleFonts.aBeeZee(
-                color: Colors.black87,
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Spacer(),
-            IconButton(
-              icon: Icon(
-                isBeepSoundEnabled
-                    ? Icons.notifications
-                    : Icons.notifications_off,
-                color:
-                    isBeepSoundEnabled ? Colors.green : const Color(0xFF005015),
-              ),
-              onPressed: () {
-                provider.setBeepBool(index);
-              },
-            ),
-          ],
-        ),
-      ),
+    // Calculate if this prayer is the current one
+    final now = DateTime.now();
+    final timeParts = time.split(':');
+    bool isCurrent = false;
+
+    if (timeParts.length == 2) {
+      try {
+        int hour = int.parse(timeParts[0]);
+        int minute = int.parse(timeParts[1]);
+        final prayerDateTime =
+            DateTime(now.year, now.month, now.day, hour, minute);
+
+        // Check if this prayer is within 30 minutes (before or after)
+        final difference = prayerDateTime.difference(now).abs();
+        isCurrent = difference.inMinutes <= 30;
+      } catch (e) {
+        isCurrent = false;
+      }
+    }
+
+    return ModernPrayerCard(
+      prayerName: name,
+      prayerTime: time,
+      isActive: isCurrent,
+      isBeepEnabled: isBeepSoundEnabled,
+      onToggleBeep: () {
+        provider.setBeepBool(index);
+      },
     );
   }
 

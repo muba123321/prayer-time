@@ -8,6 +8,7 @@ import 'package:gicc/widgets/qiblascreen_widgets/loading_indicator.dart';
 import 'package:gicc/widgets/qiblascreen_widgets/qiblah_compass.dart';
 import 'package:gicc/widgets/qiblascreen_widgets/qiblah_map.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:gicc/core/theme/design_system.dart';
 
 class QiblaScreen extends StatefulWidget {
   const QiblaScreen({super.key});
@@ -50,33 +51,47 @@ class QiblaScreenState extends State<QiblaScreen> {
                     current: _showCompass,
                     first: false,
                     second: true,
-                    borderWidth: 5.0,
-                    height: 55,
-                    indicatorSize: const Size.fromWidth(100),
+                    borderWidth: 3.0,
+                    height: 60,
+                    indicatorSize: const Size.fromWidth(110),
                     style: ToggleStyle(
                       borderColor: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius:
+                          BorderRadius.circular(AppSpacing.borderRadiusLg),
+                      backgroundColor: Theme.of(context).cardColor,
                       boxShadow: [
-                        const BoxShadow(
-                          color: Colors.black26,
+                        BoxShadow(
+                          color: AppColors.shadowMedium,
                           spreadRadius: 1,
-                          blurRadius: 2,
-                          offset: Offset(0, 1.5),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
                     onChanged: (b) => setState(() => _showCompass = b),
                     styleBuilder: (i) => ToggleStyle(
-                      indicatorColor: i ? Colors.deepOrange : Colors.blue,
+                      indicatorColor:
+                          i ? AppColors.secondary : AppColors.primary,
                     ),
                     iconBuilder: (value) => value
-                        ? const Icon(FlutterIslamicIcons.qibla,
-                            color: Colors.white)
-                        : const Icon(FlutterIslamicIcons.kaaba,
-                            color: Colors.white),
-                    textBuilder: (value) => value
-                        ? const Center(child: Text('Compass'))
-                        : const Center(child: Text('Map')),
+                        ? const Icon(
+                            FlutterIslamicIcons.qibla,
+                            color: Colors.white,
+                            size: 28,
+                          )
+                        : const Icon(
+                            FlutterIslamicIcons.kaaba,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                    textBuilder: (value) => Center(
+                      child: Text(
+                        value ? 'Compass' : 'Map',
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],

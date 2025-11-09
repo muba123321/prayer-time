@@ -44,7 +44,7 @@ class DateTimePickerWidget extends StatelessWidget {
                       : Icon(
                           Icons.calendar_today,
                           size: 20,
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                         )
                 ],
               ),
@@ -75,7 +75,7 @@ class DateTimePickerWidget extends StatelessWidget {
                       : Icon(
                           Icons.access_time,
                           size: 20,
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                         )
                 ],
               ),

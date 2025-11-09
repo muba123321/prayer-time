@@ -130,7 +130,9 @@ class SplashScreenState extends State<SplashScreen> {
             TextButton(
               onPressed: () async {
                 await openAppSettings();
-                Navigator.of(context).pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               },
               child: const Text("Open Settings"),
             ),
