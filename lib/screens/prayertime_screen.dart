@@ -72,16 +72,20 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                             // prayerTimesProvider.updatePrayerTimesBySwipe(index);
                           },
                           itemBuilder: (context, index) {
-                            return SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildDateInfo(prayerTimesProvider, index),
-                                  _buildPrayerTimesList(
-                                      prayerTimesProvider, index),
-                                  // Add bottom spacing
-                                ],
-                              ),
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildDateInfo(prayerTimesProvider, index),
+                                Expanded(
+                                  child: ListView(
+                                    padding: EdgeInsets.zero,
+                                    children: [
+                                      _buildPrayerTimesList(
+                                          prayerTimesProvider, index),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             );
                           },
                         ),

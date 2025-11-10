@@ -24,7 +24,7 @@ class ModernDateCard extends StatelessWidget {
       int.parse(dateParts[0]),
     );
     final dayName = DateFormat('EEEE').format(dateObj);
-    final monthYear = DateFormat('MMMM yyyy').format(dateObj);
+    final monthYear = DateFormat('d MMMM yyyy').format(dateObj);
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
