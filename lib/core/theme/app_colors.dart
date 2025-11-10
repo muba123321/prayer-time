@@ -4,17 +4,24 @@ class AppColors {
   // Private constructor to prevent instantiation
   AppColors._();
 
-  // Primary Colors - Islamic Green Theme
-  static const Color primary = Color(0xFF0D7E3D); // Islamic Green
-  static const Color primaryContainer = Color(0xFF4CAF50);
+  // Primary Colors - Modern Teal/Sage Theme (subtle, sophisticated)
+  static const Color primary = Color(0xFF2C6B6D); // Muted teal-green
+  static const Color primaryLight = Color(0xFF4A8C8E); // Lighter teal
+  static const Color primaryDark = Color(0xFF1F4F51); // Darker teal
+  static const Color primaryContainer = Color(0xFFD8ECED);
   static const Color onPrimary = Colors.white;
-  static const Color onPrimaryContainer = Color(0xFF002106);
+  static const Color onPrimaryContainer = Color(0xFF0A2526);
 
-  // Secondary Colors - Gold/Amber Theme
-  static const Color secondary = Color(0xFFFFD700); // Gold
-  static const Color secondaryContainer = Color(0xFFFFE082);
-  static const Color onSecondary = Color(0xFF1A1A1A);
-  static const Color onSecondaryContainer = Color(0xFF332900);
+  // Secondary Colors - Warm Earth Tones (replacing harsh gold)
+  static const Color secondary = Color(0xFF8B7355); // Warm taupe/brown
+  static const Color secondaryLight = Color(0xFFA68B71); // Lighter brown
+  static const Color secondaryContainer = Color(0xFFE8DDD3);
+  static const Color onSecondary = Colors.white;
+  static const Color onSecondaryContainer = Color(0xFF2B1F15);
+
+  // Accent Colors - Soft Coral for highlights
+  static const Color accent = Color(0xFFE07A5F); // Soft coral
+  static const Color accentLight = Color(0xFFF2A490);
 
   // Surface Colors
   static const Color surface = Color(0xFFFAFAFA);
@@ -36,32 +43,33 @@ class AppColors {
   static const Color textTertiary = Color(0xFF9CA3AF);
 
   // Prayer Time Specific Colors
-  static const Color prayerActiveCard = Color(0xFFE8F5E8);
+  static const Color prayerActiveCard =
+      Color(0xFFF0F9F9); // Very light teal background
   static const Color prayerInactiveCard = Colors.white;
-  static const Color prayerTimeBorder = Color(0xFF0D7E3D);
-  static const Color prayerProgressActive = Color(0xFF4CAF50);
+  static const Color prayerTimeBorder = Color(0xFF2C6B6D);
+  static const Color prayerProgressActive = Color(0xFF4A8C8E);
   static const Color prayerProgressInactive = Color(0xFFE0E0E0);
 
   // Qibla Colors
-  static const Color qiblaCompass = Color(0xFF0D7E3D);
-  static const Color qiblaCompassAccent = Color(0xFFFFD700);
-  static const Color qiblaBackground = Color(0xFFF0F8F0);
+  static const Color qiblaCompass = Color(0xFF2C6B6D);
+  static const Color qiblaCompassAccent = Color(0xFF8B7355);
+  static const Color qiblaBackground = Color(0xFFF0F5F5);
 
-  // Event Colors
-  static const Color eventPrimary = Color(0xFF1976D2);
-  static const Color eventSecondary = Color(0xFF9C27B0);
-  static const Color eventSuccess = Color(0xFF388E3C);
-  static const Color eventWarning = Color(0xFFFF9800);
+  // Event Colors - Modern palette
+  static const Color eventPrimary = Color(0xFF5B8FA3); // Soft blue
+  static const Color eventSecondary = Color(0xFF9A7AA0); // Soft purple
+  static const Color eventSuccess = Color(0xFF6B9F88); // Soft green
+  static const Color eventWarning = Color(0xFFE8B162); // Soft amber
 
   // Error and Status Colors
-  static const Color error = Color(0xFFD32F2F);
+  static const Color error = Color(0xFFD94545);
   static const Color errorContainer = Color(0xFFFFDAD6);
   static const Color onError = Colors.white;
   static const Color onErrorContainer = Color(0xFF410002);
 
-  static const Color success = Color(0xFF388E3C);
-  static const Color warning = Color(0xFFFF9800);
-  static const Color info = Color(0xFF1976D2);
+  static const Color success = Color(0xFF6B9F88);
+  static const Color warning = Color(0xFFE8B162);
+  static const Color info = Color(0xFF5B8FA3);
 
   // Shadow Colors
   static const Color shadowLight = Color(0x0F000000);
@@ -78,24 +86,35 @@ class AppColors {
   static const Color darkTextSecondary = Color(0xFFB1BAC4);
 
   // Islamic Pattern Colors
-  static const Color patternPrimary = Color(0xFF0D7E3D);
-  static const Color patternSecondary = Color(0xFFFFD700);
-  static const Color patternTertiary = Color(0xFF2E7D32);
+  static const Color patternPrimary = Color(0xFF2C6B6D);
+  static const Color patternSecondary = Color(0xFF8B7355);
+  static const Color patternTertiary = Color(0xFF4A8C8E);
 
-  // Gradient Colors
+  // Gradient Colors - Sophisticated gradients
   static const List<Color> primaryGradient = [
-    Color(0xFF0D7E3D),
-    Color(0xFF2E7D32),
+    Color(0xFF2C6B6D),
+    Color(0xFF4A8C8E),
   ];
 
   static const List<Color> secondaryGradient = [
-    Color(0xFFFFD700),
-    Color(0xFFFFE082),
+    Color(0xFF8B7355),
+    Color(0xFFA68B71),
   ];
 
   static const List<Color> backgroundGradient = [
     Color(0xFFF8F9FA),
     Color(0xFFFFFFFF),
+  ];
+
+  // New modern gradients for cards
+  static const List<Color> cardGradientCool = [
+    Color(0xFFE8F3F3),
+    Color(0xFFF5FAFA),
+  ];
+
+  static const List<Color> cardGradientWarm = [
+    Color(0xFFF5F1ED),
+    Color(0xFFFAF7F5),
   ];
 
   // Helper method to get color with opacity
@@ -104,7 +123,7 @@ class AppColors {
   }
 
   // Helper methods for common color combinations
-  static Color get prayerCardShadow => withAlpha(primary, 0.1);
-  static Color get qiblaShadow => withAlpha(qiblaCompass, 0.2);
-  static Color get eventCardShadow => withAlpha(textPrimary, 0.1);
+  static Color get prayerCardShadow => withAlpha(primary, 0.08);
+  static Color get qiblaShadow => withAlpha(qiblaCompass, 0.12);
+  static Color get eventCardShadow => withAlpha(textPrimary, 0.08);
 }

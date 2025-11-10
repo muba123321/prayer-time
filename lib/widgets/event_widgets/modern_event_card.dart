@@ -94,7 +94,7 @@ class ModernEventCard extends StatelessWidget {
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
               color: isDark ? AppColors.darkSurface : AppColors.surface,
-              child: Center(
+              child: const Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   color: AppColors.primary,
@@ -106,7 +106,7 @@ class ModernEventCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.event,
                     size: 64,
                     color: AppColors.textSecondary,

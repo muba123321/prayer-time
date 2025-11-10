@@ -44,10 +44,10 @@ class ModernPrayerCard extends StatelessWidget {
                 ),
               ]
             : [
-                BoxShadow(
+                const BoxShadow(
                   color: AppColors.shadowLight,
                   blurRadius: 4,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
       ),
@@ -90,10 +90,12 @@ class ModernPrayerCard extends StatelessWidget {
                           Text(
                             prayerName,
                             style: AppTextStyles.withColor(
-                              AppTextStyles.titleMedium,
+                              AppTextStyles.titleMedium.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
                               isActive
-                                  ? AppColors.primary
-                                  : AppColors.textPrimary,
+                                  ? const Color(0xFF1A1A1A)
+                                  : AppColors.textSecondary,
                             ),
                           ),
                           if (isNextPrayer) ...[
@@ -124,8 +126,10 @@ class ModernPrayerCard extends StatelessWidget {
                         Text(
                           countdown!,
                           style: AppTextStyles.withColor(
-                            AppTextStyles.bodySmall,
-                            AppColors.textSecondary,
+                            AppTextStyles.bodySmall.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                            const Color(0xFF4A5568),
                           ),
                         ),
                       ],
@@ -140,8 +144,13 @@ class ModernPrayerCard extends StatelessWidget {
                     Text(
                       prayerTime,
                       style: AppTextStyles.withColor(
-                        AppTextStyles.prayerTimeNumber.copyWith(fontSize: 24),
-                        isActive ? AppColors.primary : AppColors.textPrimary,
+                        AppTextStyles.prayerTimeNumber.copyWith(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        isActive
+                            ? const Color(0xFF1A1A1A)
+                            : AppColors.textSecondary,
                       ),
                     ),
                     if (isActive)

@@ -18,6 +18,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final usernotifier = Provider.of<AuthProvider>(context);
+
     return Selector<PrayerTimesProvider, int>(
         selector: (p0, provider) => provider.bottomsheetIndex,
         builder: (context, notifier, __) {
@@ -63,62 +64,102 @@ class HomePage extends StatelessWidget {
           }
           return Scaffold(
             appBar: AppBar(
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 16),
-                child: Text(
-                  "GICC",
-                  style: AppTextStyles.withColor(
-                    AppTextStyles.headlineSmall,
-                    Theme.of(context).appBarTheme.foregroundColor!,
+              elevation: 0,
+              scrolledUnderElevation: 2,
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.white,
+              leading: Center(
+                child: Container(
+                  margin: const EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFF2C6B6D),
+                        Color(0xFF4A8C8E),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.mosque,
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
               ),
               centerTitle: true,
-              title: Text(
-                appBarTitle,
-                style: Theme.of(context).appBarTheme.titleTextStyle,
+              title: Column(
+                children: [
+                  Text(
+                    appBarTitle,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1A1A1A),
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                  Text(
+                    'GICC',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF6B7280).withValues(alpha: 0.8),
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
               ),
-              actions: appBarTitle == 'Events' && usernotifier.user != null
+              actions: appBarTitle == 'Community Events' &&
+                      usernotifier.user != null
                   ? [
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) =>
-                                const AddEventDialog(), // Show the AddEventDialog
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            right: 16.0,
-                            top: 16,
-                          ),
-                          child: SizedBox(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.add,
-                                  size: 26,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12.0),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const AddEventDialog(),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF2C6B6D),
+                                    Color(0xFF4A8C8E),
+                                  ],
                                 ),
-                                Expanded(
-                                    child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 4.0,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.add_rounded,
+                                    size: 18,
+                                    color: Colors.white,
                                   ),
-                                  child: Text(
-                                    'Add Event',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .appBarTheme
-                                              .foregroundColor,
-                                        ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Add',
+                                    style: AppTextStyles.withColor(
+                                      AppTextStyles.labelMedium.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      Colors.white,
+                                    ),
                                   ),
-                                ))
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

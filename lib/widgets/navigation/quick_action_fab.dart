@@ -141,7 +141,7 @@ class QuickActionFab extends StatelessWidget {
           AppColors.textSecondary,
         ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.chevron_right,
         color: AppColors.textSecondary,
       ),

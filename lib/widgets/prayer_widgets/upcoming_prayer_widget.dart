@@ -16,36 +16,56 @@ class UpcomingPrayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.secondary,
-            AppColors.secondary.withValues(alpha: 0.8),
-          ],
+          colors: isDark
+              ? [
+                  const Color(0xFF2C3E50), // Elegant dark slate
+                  const Color(0xFF34495E), // Lighter slate
+                ]
+              : [
+                  AppColors.primary, // Muted teal
+                  AppColors.primaryLight, // Lighter teal
+                ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondary.withValues(alpha: 0.3),
-            blurRadius: 12,
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : AppColors.primary.withValues(alpha: 0.12),
+            blurRadius: 20,
             offset: const Offset(0, 6),
+            spreadRadius: 0,
           ),
         ],
       ),
       child: Stack(
         children: [
-          // Background pattern
+          // Background decorative pattern
           Positioned(
-            right: -20,
-            top: -20,
+            right: -30,
+            top: -30,
             child: Icon(
               FlutterIslamicIcons.mosque,
-              size: 120,
-              color: Colors.white.withValues(alpha: 0.1),
+              size: 140,
+              color: Colors.white.withValues(alpha: 0.08),
+            ),
+          ),
+
+          Positioned(
+            left: -20,
+            bottom: -20,
+            child: Icon(
+              FlutterIslamicIcons.quran,
+              size: 100,
+              color: Colors.white.withValues(alpha: 0.06),
             ),
           ),
 
@@ -54,80 +74,103 @@ class UpcomingPrayerWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
+                // Header with icon and label
                 Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.xs),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: Colors.white.withValues(alpha: 0.25),
                         borderRadius:
                             BorderRadius.circular(AppSpacing.borderRadiusXs),
                       ),
                       child: const Icon(
-                        Icons.access_time,
+                        Icons.notifications_active_outlined,
                         color: Colors.white,
-                        size: 16,
+                        size: 18,
                       ),
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     Text(
-                      'NEXT PRAYER',
+                      'UPCOMING PRAYER',
                       style: AppTextStyles.withColor(
-                        AppTextStyles.labelMedium,
-                        Colors.white,
+                        AppTextStyles.labelMedium.copyWith(
+                          letterSpacing: 1.2,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        Colors.white.withValues(alpha: 0.95),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.lg),
 
-                // Prayer name
+                // Prayer name - prominent display
                 Text(
                   prayerName,
                   style: AppTextStyles.withColor(
-                    AppTextStyles.headlineLarge,
+                    AppTextStyles.headlineLarge.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
                     Colors.white,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
 
-                // Prayer time
-                Text(
-                  prayerTime,
-                  style: AppTextStyles.withColor(
-                    AppTextStyles.titleLarge.copyWith(
-                      fontWeight: FontWeight.w500,
+                // Prayer time with icon
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.access_time_rounded,
+                      color: Colors.white,
+                      size: 20,
                     ),
-                    Colors.white.withValues(alpha: 0.9),
-                  ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      prayerTime,
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 22,
+                        ),
+                        Colors.white.withValues(alpha: 0.95),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: AppSpacing.lg),
 
-                // Countdown
+                // Countdown in elegant card
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.md,
                     vertical: AppSpacing.sm,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Colors.white.withValues(alpha: 0.18),
                     borderRadius:
                         BorderRadius.circular(AppSpacing.borderRadiusMd),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.timer_outlined,
-                        color: Colors.white,
+                      Icon(
+                        Icons.schedule_rounded,
+                        color: Colors.white.withValues(alpha: 0.9),
                         size: 20,
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
                         countdown,
                         style: AppTextStyles.withColor(
-                          AppTextStyles.titleMedium,
+                          AppTextStyles.titleMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                           Colors.white,
                         ),
                       ),

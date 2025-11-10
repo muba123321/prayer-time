@@ -10,6 +10,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      scaffoldBackgroundColor: const Color(0xFFF5F7FA),
 
       // Color Scheme
       colorScheme: const ColorScheme.light(
@@ -33,16 +34,22 @@ class AppTheme {
 
       // App Bar Theme
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.onPrimary,
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors.textPrimary,
+        surfaceTintColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 2,
+        shadowColor: AppColors.shadowLight,
         centerTitle: true,
         titleTextStyle: AppTextStyles.withColor(
-          AppTextStyles.titleLarge,
-          AppColors.onPrimary,
+          AppTextStyles.titleLarge.copyWith(
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
+          ),
+          AppColors.textPrimary,
         ),
         iconTheme: const IconThemeData(
-          color: AppColors.onPrimary,
+          color: AppColors.primary,
           size: 24,
         ),
       ),
@@ -292,6 +299,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      scaffoldBackgroundColor: const Color(0xFF121212),
 
       // Color Scheme
       colorScheme: const ColorScheme.dark(
@@ -317,14 +325,20 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.darkSurface,
         foregroundColor: AppColors.darkTextPrimary,
+        surfaceTintColor: AppColors.darkSurface,
         elevation: 0,
+        scrolledUnderElevation: 2,
+        shadowColor: Colors.black.withValues(alpha: 0.3),
         centerTitle: true,
         titleTextStyle: AppTextStyles.withColor(
-          AppTextStyles.titleLarge,
+          AppTextStyles.titleLarge.copyWith(
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
+          ),
           AppColors.darkTextPrimary,
         ),
         iconTheme: const IconThemeData(
-          color: AppColors.darkTextPrimary,
+          color: AppColors.primaryLight,
           size: 24,
         ),
       ),

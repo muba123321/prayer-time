@@ -195,7 +195,6 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
   late AnimationController _animationController;
   Animation<double>? _animation;
   double _begin = 0.0;
-  Color _buttonColor = Colors.green;
 
   Stream<LocationStatus> get stream => _locationStreamController.stream;
 
@@ -228,18 +227,6 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
     }
   }
 
-  void _updateButtonColor(int difference) {
-    setState(() {
-      if (difference == 0) {
-        _buttonColor = const Color(0xFF005015);
-      } else if (difference > 0 && difference <= 10) {
-        _buttonColor = Colors.yellow;
-      } else {
-        _buttonColor = Colors.deepOrange;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -256,49 +243,82 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
           final angle = qiblahDirection.qiblah * (pi / 180) * -1;
           final directionInt = qiblahDirection.direction.toInt();
           final offsetInt = qiblahDirection.offset.toInt();
+          final differenceAbs = (directionInt - offsetInt).abs();
+
           _animation =
               Tween(begin: _begin, end: angle).animate(_animationController);
           _begin = angle;
           _animationController.forward(from: 0);
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _updateButtonColor((directionInt - offsetInt).abs());
-          });
-
           return Stack(
             alignment: Alignment.center,
             children: <Widget>[
-              // Degree display at top
+              // Instructions card at the top
               Positioned(
-                top: 90,
+                top: 60,
+                left: 24,
+                right: 24,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary.withValues(alpha: 0.95),
+                        AppColors.primaryLight.withValues(alpha: 0.95),
+                      ],
+                    ),
                     borderRadius:
                         BorderRadius.circular(AppSpacing.borderRadiusLg),
-                    border: Border.all(
-                      color: AppColors.primary,
-                      width: 2,
-                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    "${qiblahDirection.direction.toInt()}°",
-                    style: AppTextStyles.headlineMedium.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w900,
-                    ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.explore,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          Text(
+                            "${qiblahDirection.direction.toInt()}°",
+                            style: AppTextStyles.headlineSmall.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        differenceAbs == 0
+                            ? "Perfect! Facing Qibla"
+                            : "Hold flat & rotate ${qiblahDirection.offset.toInt()}°",
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: Colors.white.withValues(alpha: 0.95),
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               ),
+
               // Compass background with animation
               Transform.rotate(
                 angle: (qiblahDirection.direction * (pi / 180) * -1),
                 child: SvgPicture.asset('assets/images/compass.svg'),
               ),
+
               // Animated needle
               AnimatedBuilder(
                 animation: _animation!,
@@ -312,17 +332,69 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
                   ),
                 ),
               ),
-              // Calibration button at bottom with modern styling
+
+              // Distance/Direction indicator at bottom
+              Positioned(
+                bottom: 120,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.95),
+                    borderRadius:
+                        BorderRadius.circular(AppSpacing.borderRadiusLg),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        differenceAbs <= 5
+                            ? Icons.check_circle
+                            : differenceAbs <= 15
+                                ? Icons.adjust
+                                : Icons.rotate_right,
+                        color: differenceAbs <= 5
+                            ? Colors.green
+                            : differenceAbs <= 15
+                                ? Colors.orange
+                                : AppColors.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      Text(
+                        differenceAbs <= 5
+                            ? "Accurate"
+                            : differenceAbs <= 15
+                                ? "Close"
+                                : "Keep Rotating",
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Calibration help button
               Positioned(
                 bottom: 40,
                 child: Material(
-                  elevation: AppElevation.medium,
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.borderRadiusLg),
+                  color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      // Haptic feedback when tapped
                       HapticFeedback.mediumImpact();
+                      _showCalibrationDialog(context);
                     },
                     borderRadius:
                         BorderRadius.circular(AppSpacing.borderRadiusLg),
@@ -332,12 +404,25 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
                         vertical: AppSpacing.md,
                       ),
                       decoration: BoxDecoration(
-                        color: _buttonColor,
+                        gradient: LinearGradient(
+                          colors: differenceAbs == 0
+                              ? [
+                                  const Color(0xFF10B981),
+                                  const Color(0xFF059669),
+                                ]
+                              : [
+                                  AppColors.primary,
+                                  AppColors.primaryLight,
+                                ],
+                        ),
                         borderRadius:
                             BorderRadius.circular(AppSpacing.borderRadiusLg),
                         boxShadow: [
                           BoxShadow(
-                            color: _buttonColor.withValues(alpha: 0.4),
+                            color: (differenceAbs == 0
+                                    ? Colors.green
+                                    : AppColors.primary)
+                                .withValues(alpha: 0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -347,16 +432,17 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            (directionInt - offsetInt).abs() == 0
-                                ? Icons.done_all
-                                : Icons.adjust,
+                            differenceAbs == 0
+                                ? Icons.done_all_rounded
+                                : Icons.help_outline_rounded,
                             color: Colors.white,
+                            size: 22,
                           ),
                           const SizedBox(width: AppSpacing.sm),
                           Text(
-                            (directionInt - offsetInt).abs() == 0
+                            differenceAbs == 0
                                 ? 'Aligned with Qibla!'
-                                : 'Rotate ${qiblahDirection.offset.toInt()}°',
+                                : 'Need Help?',
                             style: AppTextStyles.bodyLarge.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
@@ -372,6 +458,147 @@ class QiblahCompassWidgetState extends State<QiblahCompassWidget>
           );
         },
       ),
+    );
+  }
+
+  void _showCalibrationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.help_outline,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'How to Use Compass',
+                  style: AppTextStyles.titleLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildInstructionItem(
+                  '1',
+                  'Hold Device Flat',
+                  'Keep your phone parallel to the ground (screen facing up)',
+                  Icons.phone_android,
+                ),
+                const SizedBox(height: 16),
+                _buildInstructionItem(
+                  '2',
+                  'Calibrate Compass',
+                  'Move your phone in a figure-8 motion for better accuracy',
+                  Icons.all_inclusive,
+                ),
+                const SizedBox(height: 16),
+                _buildInstructionItem(
+                  '3',
+                  'Rotate Your Body',
+                  'Turn yourself (not just the phone) until the needle points to 0°',
+                  Icons.rotate_right,
+                ),
+                const SizedBox(height: 16),
+                _buildInstructionItem(
+                  '4',
+                  'Face Qibla',
+                  'When aligned, you\'re facing the direction of prayer',
+                  Icons.done_all,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Got it!',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildInstructionItem(
+      String number, String title, String description, IconData icon) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppColors.primary, AppColors.primaryLight],
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              number,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, size: 18, color: AppColors.primary),
+                  const SizedBox(width: 6),
+                  Text(
+                    title,
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
